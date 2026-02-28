@@ -132,6 +132,12 @@ class WearableNavigationService(private val context: Context,
         coroutineScope.cancel()
     }
 
+    fun sendSosSignal() {
+        coroutineScope.launch {
+            sendMessage("/sos_signal", "SOS".toByteArray())
+        }
+    }
+
     enum class ConnectionStatus {
         DISCONNECTED,
         CONNECTED,

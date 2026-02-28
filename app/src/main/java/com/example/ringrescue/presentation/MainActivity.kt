@@ -14,11 +14,50 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.unit.dp
+import android.view.KeyEvent
+import android.os.SystemClock
+import androidx.wear.compose.material3.Button
 
 class MainActivity : ComponentActivity() {
 
     // Create the ViewModel instance manually
     private lateinit var viewModel: NavigationViewModel
+
+    // SOS press tracking
+    private var pressCount = 0
+    private var firstPressTime = 0L
+    private val SOS_WINDOW_MS = 3000L // 3 seconds to press 3 times
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        if (keyCode == KeyEvent.KEYCODE_STEM_1) { // Button 1
+            handleSosPress()
+            return true
+        }
+
+        return super.onKeyDown(keyCode, event)
+    }
+
+    private fun handleSosPress() {
+        val now = SystemClock.elapsedRealtime()
+
+        if (pressCount == 0) {
+            firstPressTime = now
+        }
+
+        pressCount++
+
+        if (pressCount == 3 && (now - firstPressTime) <= SOS_WINDOW_MS) {
+            viewModel.sendSos()
+            pressCount = 0
+        }
+
+        // Reset if too slow
+        if ((now - firstPressTime) > SOS_WINDOW_MS) {
+            pressCount = 1
+            firstPressTime = now
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +95,56 @@ fun WearApp(viewModel: NavigationViewModel) {
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
+                // Temporary UI test
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Button(
+                        onClick = { viewModel.sendSos() }
+                    ) {
+                        Text("Test SOS")
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                }
+
+                // Main content
                 if (uiState.connectionStatus ==
                     WearableNavigationService.ConnectionStatus.NAVIGATING
                 ) {
                     NavigationScreen(uiState)
                 } else {
                     Text("${uiState.connectionStatus}")
+                }
+
+                // SOS function
+                if (uiState.showSosSent) {
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top=24.dp),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "🚨",
+                                style = androidx.wear.compose.material3.MaterialTheme.typography.displaySmall
+                            )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Text(
+                                text = "SOS Sent",
+                                style = androidx.wear.compose.material3.MaterialTheme.typography.bodyLarge
+                            )
+                        }
+                    }
                 }
             }
         }

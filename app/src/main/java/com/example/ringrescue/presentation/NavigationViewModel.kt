@@ -2,6 +2,7 @@ package com.example.ringrescue.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -61,6 +62,15 @@ class NavigationViewModel(
         super.onCleared()
         wearableService.cleanup()
     }
+
+    fun sendSos() {
+        viewModelScope.launch {
+            wearableService.sendSosSignal()
+            _uiState.update { it.copy(showSosSent = true) }
+            delay(5000)
+            _uiState.update { it.copy(showSosSent = false) }
+        }
+    }
 }
 
 data class NavigationUiState(
@@ -72,5 +82,6 @@ data class NavigationUiState(
     val destinationName: String = "",
     val totalDistance: Int = 0,
     val bearing: Float = 0f,
+    val showSosSent: Boolean = false,
     val connectionStatus: WearableNavigationService.ConnectionStatus = WearableNavigationService.ConnectionStatus.DISCONNECTED
 )
