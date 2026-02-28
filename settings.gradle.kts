@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "RingRescue"
 include(":app")
- 
+include(":ringrescue")
