@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Create the wearable service
-        val wearableService = WearableNavigationService(this, simulate = true)
+        val wearableService = WearableNavigationService(this, simulate = false)
 
         // Create ViewModel manually
         viewModel = NavigationViewModel(wearableService)
