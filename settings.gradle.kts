@@ -23,5 +23,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "RingRescue"
-include(":app")
 include(":ringrescue")
+project(":ringrescue").projectDir = file("mobile")
+include(":wear")
