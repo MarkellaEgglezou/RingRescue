@@ -1,6 +1,7 @@
 package com.example.ringrescue
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -38,6 +39,8 @@ class MainActivity : ComponentActivity() {
     private val mockLon = 4.897982
 
     private var userMarker: Marker? = null
+    private var destinationMarker: Marker? = null
+    private var hasArrived = false
 
     private lateinit var instructionText: TextView
     private lateinit var distanceText: TextView
@@ -115,6 +118,18 @@ class MainActivity : ComponentActivity() {
 
                         controller.startNavigation(startLat, startLon, lat, lon)
                         
+                        hasArrived = false
+                        val destLatLng = LatLng(lat, lon)
+                        if (destinationMarker == null) {
+                            destinationMarker = map.addMarker(
+                                MarkerOptions()
+                                    .position(destLatLng)
+                                    .title("Destination")
+                            )
+                        } else {
+                            destinationMarker?.position = destLatLng
+                        }
+
                         navigationPanel.visibility = View.VISIBLE
                         
                         map.moveCamera(
@@ -184,6 +199,14 @@ class MainActivity : ComponentActivity() {
 
                 controller.updateLocation(activeLocation)
 
+                if (!hasArrived && destinationMarker != null) {
+                    val dist = controller.distanceToDestination(activeLocation)
+                    if (dist < 30.0) { // 30 meters threshold
+                        hasArrived = true
+                        showArrivalDialog()
+                    }
+                }
+
                 val cue = controller.getCurrentCue()
                 cue?.let {
                     instructionText.text = it.instruction
@@ -192,6 +215,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun showArrivalDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Arrived")
+            .setMessage("You have reached your destination!")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                navigationPanel.visibility = View.GONE
+            }
+            .show()
     }
 
     private fun drawRoute(

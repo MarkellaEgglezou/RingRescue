@@ -1,85 +1,95 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
-    <org.maplibre.android.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <include layout="@layout/header_layout" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#CCFFFFFF"
-        android:padding="8dp"
-        android:layout_gravity="top">
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <org.maplibre.android.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:background="#CCFFFFFF"
+            android:padding="8dp"
+            android:layout_gravity="top">
 
-            <EditText
-                android:id="@+id/destLat"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Lat"
-                android:inputType="numberDecimal|numberSigned"
-                android:text="52.3556"/>
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/destLon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Lon"
-                android:inputType="numberDecimal|numberSigned"
-                android:text="4.9550"/>
+                <EditText
+                    android:id="@+id/destLat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Lat"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="52.3556"/>
 
-            <Button
-                android:id="@+id/btnStartNav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Start"/>
+                <EditText
+                    android:id="@+id/destLon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Lon"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:text="4.9550"/>
+
+                <Button
+                    android:id="@+id/btnStartNav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/navigationPanel"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:background="#CC000000"
-        android:padding="16dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/instructionText"
+        <LinearLayout
+            android:id="@+id/navigationPanel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:text="Starting navigation..."/>
+            android:layout_height="120dp"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:background="#CC000000"
+            android:padding="16dp"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/distanceText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:text="0 m"/>
+            <TextView
+                android:id="@+id/instructionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="Starting navigation..."/>
 
-        <TextView
-            android:id="@+id/streetText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:text=""/>
+            <TextView
+                android:id="@+id/distanceText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:text="0 m"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/streetText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:text=""/>
 
-</FrameLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>
