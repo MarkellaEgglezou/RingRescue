@@ -1,11 +1,19 @@
 package com.example.ringrescue
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.core.app.ActivityCompat
 import kotlinx.coroutines.*
 import org.maplibre.android.MapLibre
+import org.maplibre.android.annotations.Marker
+import org.maplibre.android.annotations.MarkerOptions
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
+import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.MapView
 import org.maplibre.android.maps.Style
 import org.maplibre.android.style.layers.LineLayer
@@ -18,20 +26,50 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var controller: NavigationController
+    private lateinit var locationService: LocationService
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    private val useMockLocation = true
+    private val mockLat = 52.379214
+    private val mockLon = 4.897982
+
+    private var userMarker: Marker? = null
+
+    private lateinit var instructionText: TextView
+    private lateinit var distanceText: TextView
+    private lateinit var streetText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         MapLibre.getInstance(this)
 
-        mapView = MapView(this)
-        setContentView(mapView)
+        setContentView(R.layout.activity_main)
+
+        mapView = findViewById(R.id.mapView)
+
+        instructionText = findViewById(R.id.instructionText)
+        distanceText = findViewById(R.id.distanceText)
+        streetText = findViewById(R.id.streetText)
+
+        locationService = LocationService(this)
 
         val graphhopper = GraphhopperService("e8d1e0f8-1e9e-4034-bc2f-25153ec6bcc1")
         val wearService = PhoneWearService(this)
 
         controller = NavigationController(graphhopper, wearService)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
+        }
 
         mapView.getMapAsync { map ->
             map.setStyle(
@@ -40,24 +78,105 @@ class MainActivity : ComponentActivity() {
                 )
             ) { style ->
                 scope.launch {
-                    try {
-                        val route = controller.startNavigation(
-                            52.3791, 4.8994,
-                            52.3556, 4.9550
+
+                    val startLat: Double
+                    val startLon: Double
+
+                    if (useMockLocation) {
+                        startLat = mockLat
+                        startLon = mockLon
+                    } else {
+                        val loc = locationService.location.value
+                        if (loc == null) {
+                            println("Waiting for GPS location...")
+                            return@launch
+                        }
+                        startLat = loc.latitude
+                        startLon = loc.longitude
+                    }
+
+                    val route =
+                        controller.startNavigation(
+                            startLat,
+                            startLon,
+                            52.3556, 4.9550   // destination
                         )
+
+                    drawRoute(style, route.points)
+
+                    map.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(startLat, startLon),
+                            15.0
+                        )
+                    )
+
+                    startLocationUpdates(map)
+                }
+            }
+        }
+    }
+
+    private fun startLocationUpdates(map: MapLibreMap) {
+
+        locationService.start()
+
+        scope.launch {
+            locationService.location.collect { location ->
+
+                val currentLat: Double
+                val currentLon: Double
+                val activeLocation: Location?
+
+                if (useMockLocation) {
+                    currentLat = mockLat
+                    currentLon = mockLon
+                    // Create a mock Location object
+                    activeLocation = Location("mock").apply {
+                        latitude = mockLat
+                        longitude = mockLon
+                        time = System.currentTimeMillis()
+                        accuracy = 1.0f
+                    }
+                } else {
+                    if (location == null) return@collect
+                    currentLat = location.latitude
+                    currentLon = location.longitude
+                    activeLocation = location
+                }
+
+                val latLng = LatLng(currentLat, currentLon)
+
+                map.easeCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        latLng,
+                        16.0
+                    )
+                )
+
+                // User location marker
+                if (userMarker == null) {
+                    userMarker = map.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title("You")
+                    )
+                } else {
+                    userMarker!!.position = latLng
+                }
+
+                // Update navigation UI (even for mock location)
+                activeLocation.let { loc ->
+                    controller.updateLocation(loc)
+
+                    val cue = controller.getCurrentCue()
+                    cue?.let {
+                        instructionText.text = it.instruction
                         
-                        drawRoute(style, route.points)
+                        // Show distance to the next turn (from the cue)
+                        distanceText.text = "${it.distanceToNextTurn} m"
 
-                        val start = route.points.first()
-
-                        map.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                LatLng(start.first, start.second),
-                                15.0
-                            )
-                        )
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                        streetText.text = it.nextStreet
                     }
                 }
             }
@@ -78,7 +197,6 @@ class MainActivity : ComponentActivity() {
         )
 
         val source = GeoJsonSource("route-source")
-        // Use toJson() to pass the data as a String.
         source.setGeoJson(line.toJson())
 
         style.addSource(source)
@@ -99,6 +217,7 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() { 
         super.onDestroy()
         if (::mapView.isInitialized) mapView.onDestroy()
+        locationService.stop()
         scope.cancel()
     }
 }
