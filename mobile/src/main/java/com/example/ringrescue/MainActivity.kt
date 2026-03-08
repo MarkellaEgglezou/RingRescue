@@ -4,6 +4,10 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
@@ -38,6 +42,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var instructionText: TextView
     private lateinit var distanceText: TextView
     private lateinit var streetText: TextView
+    private lateinit var navigationPanel: LinearLayout
+    private lateinit var destLatInput: EditText
+    private lateinit var destLonInput: EditText
+    private lateinit var btnStartNav: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +59,10 @@ class MainActivity : ComponentActivity() {
         instructionText = findViewById(R.id.instructionText)
         distanceText = findViewById(R.id.distanceText)
         streetText = findViewById(R.id.streetText)
+        navigationPanel = findViewById(R.id.navigationPanel)
+        destLatInput = findViewById(R.id.destLat)
+        destLonInput = findViewById(R.id.destLon)
+        btnStartNav = findViewById(R.id.btnStartNav)
 
         locationService = LocationService(this)
 
@@ -78,39 +90,40 @@ class MainActivity : ComponentActivity() {
                 )
             ) { style ->
                 observeRoute(style)
+                startLocationUpdates(map)
 
-                scope.launch {
+                btnStartNav.setOnClickListener {
+                    val lat = destLatInput.text.toString().toDoubleOrNull() ?: 0.0
+                    val lon = destLonInput.text.toString().toDoubleOrNull() ?: 0.0
 
-                    val startLat: Double
-                    val startLon: Double
+                    scope.launch {
+                        val startLat: Double
+                        val startLon: Double
 
-                    if (useMockLocation) {
-                        startLat = mockLat
-                        startLon = mockLon
-                    } else {
-                        var loc = locationService.location.value
-                        while (loc == null) {
-                            delay(500)
-                            loc = locationService.location.value
+                        if (useMockLocation) {
+                            startLat = mockLat
+                            startLon = mockLon
+                        } else {
+                            var loc = locationService.location.value
+                            while (loc == null) {
+                                delay(500)
+                                loc = locationService.location.value
+                            }
+                            startLat = loc.latitude
+                            startLon = loc.longitude
                         }
-                        startLat = loc.latitude
-                        startLon = loc.longitude
-                    }
 
-                    controller.startNavigation(
-                        startLat,
-                        startLon,
-                        52.3556, 4.9550   // destination
-                    )
-
-                    map.moveCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(startLat, startLon),
-                            15.0
+                        controller.startNavigation(startLat, startLon, lat, lon)
+                        
+                        navigationPanel.visibility = View.VISIBLE
+                        
+                        map.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(startLat, startLon),
+                                15.0
+                            )
                         )
-                    )
-
-                    startLocationUpdates(map)
+                    }
                 }
             }
         }
