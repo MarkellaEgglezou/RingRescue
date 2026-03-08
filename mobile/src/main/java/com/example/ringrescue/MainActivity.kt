@@ -77,6 +77,8 @@ class MainActivity : ComponentActivity() {
                     "https://tiles.openfreemap.org/styles/liberty"
                 )
             ) { style ->
+                observeRoute(style)
+
                 scope.launch {
 
                     val startLat: Double
@@ -86,23 +88,20 @@ class MainActivity : ComponentActivity() {
                         startLat = mockLat
                         startLon = mockLon
                     } else {
-                        val loc = locationService.location.value
-                        if (loc == null) {
-                            println("Waiting for GPS location...")
-                            return@launch
+                        var loc = locationService.location.value
+                        while (loc == null) {
+                            delay(500)
+                            loc = locationService.location.value
                         }
                         startLat = loc.latitude
                         startLon = loc.longitude
                     }
 
-                    val route =
-                        controller.startNavigation(
-                            startLat,
-                            startLon,
-                            52.3556, 4.9550   // destination
-                        )
-
-                    drawRoute(style, route.points)
+                    controller.startNavigation(
+                        startLat,
+                        startLon,
+                        52.3556, 4.9550   // destination
+                    )
 
                     map.moveCamera(
                         CameraUpdateFactory.newLatLngZoom(
@@ -117,6 +116,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun observeRoute(style: Style) {
+        scope.launch {
+            controller.route.collect { route ->
+                route?.let {
+                    drawRoute(style, it.points)
+                }
+            }
+        }
+    }
+
     private fun startLocationUpdates(map: MapLibreMap) {
 
         locationService.start()
@@ -126,12 +135,11 @@ class MainActivity : ComponentActivity() {
 
                 val currentLat: Double
                 val currentLon: Double
-                val activeLocation: Location?
+                val activeLocation: Location
 
                 if (useMockLocation) {
                     currentLat = mockLat
                     currentLon = mockLon
-                    // Create a mock Location object
                     activeLocation = Location("mock").apply {
                         latitude = mockLat
                         longitude = mockLon
@@ -148,13 +156,9 @@ class MainActivity : ComponentActivity() {
                 val latLng = LatLng(currentLat, currentLon)
 
                 map.easeCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        latLng,
-                        16.0
-                    )
+                    CameraUpdateFactory.newLatLng(latLng)
                 )
 
-                // User location marker
                 if (userMarker == null) {
                     userMarker = map.addMarker(
                         MarkerOptions()
@@ -165,19 +169,13 @@ class MainActivity : ComponentActivity() {
                     userMarker!!.position = latLng
                 }
 
-                // Update navigation UI (even for mock location)
-                activeLocation.let { loc ->
-                    controller.updateLocation(loc)
+                controller.updateLocation(activeLocation)
 
-                    val cue = controller.getCurrentCue()
-                    cue?.let {
-                        instructionText.text = it.instruction
-                        
-                        // Show distance to the next turn (from the cue)
-                        distanceText.text = "${it.distanceToNextTurn} m"
-
-                        streetText.text = it.nextStreet
-                    }
+                val cue = controller.getCurrentCue()
+                cue?.let {
+                    instructionText.text = it.instruction
+                    distanceText.text = "${it.distanceToNextTurn} m"
+                    streetText.text = it.nextStreet
                 }
             }
         }
@@ -196,18 +194,23 @@ class MainActivity : ComponentActivity() {
             }
         )
 
-        val source = GeoJsonSource("route-source")
-        source.setGeoJson(line.toJson())
+        val sourceId = "route-source"
+        val layerId = "route-layer"
 
-        style.addSource(source)
+        val source = style.getSourceAs<GeoJsonSource>(sourceId)
+        if (source != null) {
+            source.setGeoJson(line.toJson())
+        } else {
+            val newSource = GeoJsonSource(sourceId, line.toJson())
+            style.addSource(newSource)
 
-        val layer = LineLayer("route-layer", "route-source")
-            .withProperties(
-                lineColor("#ff0000"),
-                lineWidth(6f)
-            )
-
-        style.addLayer(layer)
+            val layer = LineLayer(layerId, sourceId)
+                .withProperties(
+                    lineColor("#ff0000"),
+                    lineWidth(6f)
+                )
+            style.addLayer(layer)
+        }
     }
 
     override fun onStart() { super.onStart(); if (::mapView.isInitialized) mapView.onStart() }

@@ -1,7 +1,11 @@
 package com.example.ringrescue
 
 import android.location.Location
+import android.util.Log
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.*
 
 class NavigationController(
@@ -17,6 +21,12 @@ class NavigationController(
     private var destinationLat = 0.0
     private var destinationLon = 0.0
 
+    private var isRerouting = false
+    private val OFF_COURSE_THRESHOLD_METERS = 20.0
+
+    private val _route = MutableStateFlow<NavigationRoute?>(null)
+    val route: StateFlow<NavigationRoute?> = _route.asStateFlow()
+
     suspend fun startNavigation(
         startLat: Double,
         startLon: Double,
@@ -26,37 +36,64 @@ class NavigationController(
 
         wearService.sendNavigationStarted()
 
-        val route = graphhopperService.getRoute(
+        val navigationRoute = graphhopperService.getRoute(
             startLat,
             startLon,
             endLat,
             endLon
         )
 
-        routePoints = route.points
-
+        routePoints = navigationRoute.points
         destinationLat = endLat
         destinationLon = endLon
-
-        cues = route.cues
+        cues = navigationRoute.cues
         currentCueIndex = 0
+
+        _route.value = navigationRoute
 
         if (cues.isNotEmpty()) {
             wearService.sendCue(cues[0])
         }
 
-        return route
+        return navigationRoute
     }
 
     fun updateLocation(location: Location) {
+        if (routePoints.isEmpty() || isRerouting || currentCueIndex >= cues.size) return
 
-        if (currentCueIndex >= cues.size) return
+        // 1. Check if the user is off-course
+        val minDistance = routePoints.minOf { 
+            distance(location.latitude, location.longitude, it.first, it.second)
+        }
 
-        // In a real app, we would calculate distance to the next instruction point.
-        // For now, we'll just use a placeholder to advance instructions.
-        // This logic should be improved to use routePoints and cues.
-        
-        // Let's assume for this fix we just want it to compile.
+        if (minDistance > OFF_COURSE_THRESHOLD_METERS) {
+            Log.d("NavigationController", "Off-course detected (dist: $minDistance). Triggering reroute.")
+            triggerReroute(location)
+            return
+        }
+
+        // 2. Advance to next cue logic could be added here
+    }
+
+    private fun triggerReroute(location: Location) {
+        if (isRerouting) return
+        isRerouting = true
+
+        scope.launch {
+            try {
+                startNavigation(
+                    location.latitude,
+                    location.longitude,
+                    destinationLat,
+                    destinationLon
+                )
+                Log.d("NavigationController", "Reroute successful.")
+            } catch (e: Exception) {
+                Log.e("NavigationController", "Reroute failed", e)
+            } finally {
+                isRerouting = false
+            }
+        }
     }
 
     fun getCurrentCue(): NavigationCue? {
