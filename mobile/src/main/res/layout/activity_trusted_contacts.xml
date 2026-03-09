@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_light"
     android:fitsSystemWindows="true">
 
     <include layout="@layout/header_layout" />
@@ -15,7 +17,7 @@
         android:paddingHorizontal="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="8dp"
-        android:textColor="#333333" />
+        android:textColor="@color/black" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,6 +32,7 @@
             android:layout_centerInParent="true"
             android:text="No trusted contacts yet."
             android:textSize="16sp"
+            android:textColor="@color/text_grey"
             android:visibility="visible" />
 
         <ListView
@@ -37,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@android:color/transparent"
-            android:dividerHeight="16dp"
+            android:dividerHeight="12dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:clipToPadding="false"
@@ -51,6 +54,8 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
             android:src="@android:drawable/ic_input_add"
+            android:backgroundTint="@color/primary_red"
+            app:tint="@color/white"
             android:contentDescription="Add Contact" />
 
     </RelativeLayout>

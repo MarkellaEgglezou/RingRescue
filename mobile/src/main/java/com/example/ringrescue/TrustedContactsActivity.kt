@@ -6,7 +6,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -50,7 +49,6 @@ class ContactAdapter(
         
         if (!contact.imageUri.isNullOrEmpty()) {
             try {
-                // Check if we still have permission to the URI, if it's a content URI
                 imageView.setImageURI(Uri.parse(contact.imageUri))
             } catch (e: Exception) {
                 imageView.setImageResource(android.R.drawable.ic_menu_report_image)
@@ -163,8 +161,8 @@ class TrustedContactsActivity : AppCompatActivity() {
     }
 
     private fun setupFooter() {
-        // Highlight active tab background only
-        footerTrustedContacts.setBackgroundResource(R.drawable.footer_item_selected_bg)
+        // Highlight active tab icon color
+        findViewById<ImageView>(R.id.footer_trusted_contacts_icon).setColorFilter(getColor(R.color.primary_red))
 
         footerNavigation.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)

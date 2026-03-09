@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import kotlinx.coroutines.*
 import org.maplibre.android.MapLibre
 import org.maplibre.android.annotations.Marker
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var instructionText: TextView
     private lateinit var distanceText: TextView
     private lateinit var streetText: TextView
-    private lateinit var navigationPanel: LinearLayout
+    private lateinit var navigationPanel: View
     private lateinit var destLatInput: EditText
     private lateinit var destLonInput: EditText
     private lateinit var btnStartNav: Button
@@ -166,8 +165,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFooter() {
-        // Highlight active tab background only
-        footerNavigation.setBackgroundResource(R.drawable.footer_item_selected_bg)
+        // Highlight active tab icon color
+        findViewById<ImageView>(R.id.footer_navigation_icon).setColorFilter(getColor(R.color.primary_red))
 
         footerNavigation.setOnClickListener {
             // Already on navigation page
@@ -308,7 +307,7 @@ class MainActivity : AppCompatActivity() {
 
             val layer = LineLayer(layerId, sourceId)
                 .withProperties(
-                    lineColor("#ff0000"),
+                    lineColor(getColor(R.color.primary_red)),
                     lineWidth(6f)
                 )
             style.addLayer(layer)

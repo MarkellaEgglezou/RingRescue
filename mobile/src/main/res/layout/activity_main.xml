@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_light"
     android:fitsSystemWindows="true">
 
     <include layout="@layout/header_layout" />
@@ -16,18 +18,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <LinearLayout
+        <!-- Search Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#CCFFFFFF"
-            android:padding="8dp"
-            android:layout_gravity="top">
+            android:layout_margin="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:gravity="center_vertical">
 
                 <EditText
                     android:id="@+id/destLat"
@@ -36,7 +41,15 @@
                     android:layout_weight="1"
                     android:hint="Lat"
                     android:inputType="numberDecimal|numberSigned"
+                    android:background="@null"
+                    android:padding="8dp"
+                    android:textSize="14sp"
                     android:text="52.3556"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="24dp"
+                    android:background="@color/divider_color" />
 
                 <EditText
                     android:id="@+id/destLon"
@@ -45,53 +58,70 @@
                     android:layout_weight="1"
                     android:hint="Lon"
                     android:inputType="numberDecimal|numberSigned"
+                    android:background="@null"
+                    android:padding="8dp"
+                    android:textSize="14sp"
                     android:text="4.9550"/>
 
                 <Button
                     android:id="@+id/btnStartNav"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="36dp"
                     android:text="Start"
-                    android:backgroundTint="#808080"
-                    android:alpha="0.5"/>
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:backgroundTint="@color/primary_red"
+                    app:cornerRadius="18dp"/>
             </LinearLayout>
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
+        <!-- Navigation Panel -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/navigationPanel"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:background="#CC000000"
-            android:padding="16dp"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="#CC000000"
+            app:cardElevation="8dp"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/instructionText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:text="Starting navigation..."/>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/distanceText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:text="0 m"/>
+                <TextView
+                    android:id="@+id/instructionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="Starting navigation..."/>
 
-            <TextView
-                android:id="@+id/streetText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:text=""/>
+                <TextView
+                    android:id="@+id/distanceText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:alpha="0.8"
+                    android:text="0 m"/>
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/streetText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:alpha="0.6"
+                    android:text=""/>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
 
