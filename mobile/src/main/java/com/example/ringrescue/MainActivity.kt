@@ -2,16 +2,16 @@ package com.example.ringrescue
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.ComponentActivity
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.*
 import org.maplibre.android.MapLibre
 import org.maplibre.android.annotations.Marker
@@ -27,11 +27,12 @@ import org.maplibre.android.style.sources.GeoJsonSource
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var controller: NavigationController
     private lateinit var locationService: LocationService
+    private lateinit var wearService: PhoneWearService
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private val useMockLocation = true
@@ -49,6 +50,14 @@ class MainActivity : ComponentActivity() {
     private lateinit var destLatInput: EditText
     private lateinit var destLonInput: EditText
     private lateinit var btnStartNav: Button
+    private lateinit var btnSOS: Button
+    
+    // Footer views
+    private lateinit var footerNavigation: View
+    private lateinit var footerDeviceInfo: View
+    private lateinit var footerTrustedContacts: View
+
+    private lateinit var sosManager: SosManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,13 +75,25 @@ class MainActivity : ComponentActivity() {
         destLatInput = findViewById(R.id.destLat)
         destLonInput = findViewById(R.id.destLon)
         btnStartNav = findViewById(R.id.btnStartNav)
+        btnSOS = findViewById(R.id.btnSOS)
+
+        footerNavigation = findViewById(R.id.footer_navigation)
+        footerDeviceInfo = findViewById(R.id.footer_device_info)
+        footerTrustedContacts = findViewById(R.id.footer_trusted_contacts)
 
         locationService = LocationService(this)
+        sosManager = SosManager(this)
 
         val graphhopper = GraphhopperService("e8d1e0f8-1e9e-4034-bc2f-25153ec6bcc1")
-        val wearService = PhoneWearService(this)
+        wearService = PhoneWearService(this)
 
         controller = NavigationController(graphhopper, wearService)
+
+        setupFooter()
+
+        btnSOS.setOnClickListener {
+            sosManager.sendSos()
+        }
 
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -141,6 +162,40 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun setupFooter() {
+        // Highlight active tab background only
+        footerNavigation.setBackgroundResource(R.drawable.footer_item_selected_bg)
+
+        footerNavigation.setOnClickListener {
+            // Already on navigation page
+        }
+        footerDeviceInfo.setOnClickListener {
+            showDeviceInfo()
+        }
+        footerTrustedContacts.setOnClickListener {
+            startActivity(Intent(this, TrustedContactsActivity::class.java))
+        }
+    }
+
+    private fun showDeviceInfo() {
+        scope.launch {
+            val isConnected = wearService.isWatchConnected()
+            val batteryLevel = wearService.getWatchBatteryLevel()
+            
+            val message = if (isConnected) {
+                "Watch is connected.\nBattery Level: ${batteryLevel ?: "Unknown"}%"
+            } else {
+                "Watch is disconnected."
+            }
+
+            AlertDialog.Builder(this@MainActivity)
+                .setTitle("Device Information")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show()
         }
     }
 

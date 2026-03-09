@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ACC7F2"
@@ -14,10 +15,11 @@
         android:contentDescription="App Logo" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginStart="12dp">
+        android:layout_marginStart="12dp"
+        android:layout_weight="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,9 +32,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ride safe, ride confident!"
+            android:text="Ride safe, ride confident"
             android:textColor="#666666"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSOS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SOS"
+        android:backgroundTint="#FF0000"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:cornerRadius="8dp" />
 
 </LinearLayout>

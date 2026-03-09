@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RingRescue</string>
+    <string name="content_description_more_options">More options</string>
+    <string name="content_description_delete_contact">Delete contact</string>
 </resources>

@@ -51,7 +51,9 @@
                     android:id="@+id/btnStartNav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Start"/>
+                    android:text="Start"
+                    android:backgroundTint="#808080"
+                    android:alpha="0.5"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -92,4 +94,7 @@
         </LinearLayout>
 
     </FrameLayout>
+
+    <include layout="@layout/footer_layout" />
+
 </LinearLayout>

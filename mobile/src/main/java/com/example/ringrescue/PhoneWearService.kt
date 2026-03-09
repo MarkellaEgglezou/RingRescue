@@ -23,6 +23,23 @@ class PhoneWearService(private val context: Context) {
         send("/navigation_cue", cue.toJson().toByteArray())
     }
 
+    suspend fun isWatchConnected(): Boolean {
+        return try {
+            val nodes = nodeClient.connectedNodes.await()
+            nodes.isNotEmpty()
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    // This is a placeholder. Real battery level would require a message exchange.
+    // For now, returning a mock value if connected.
+    suspend fun getWatchBatteryLevel(): Int? {
+        if (!isWatchConnected()) return null
+        // In a real app, you'd send a request and wait for a response via MessageClient/DataClient
+        return 85
+    }
+
     private suspend fun send(path: String, data: ByteArray) {
         try {
             val nodes = nodeClient.connectedNodes.await()

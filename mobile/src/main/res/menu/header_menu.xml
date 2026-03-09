@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_navigation"
+        android:title="Navigation" />
+    <item
+        android:id="@+id/menu_device_info"
+        android:title="Device Information" />
+    <item
+        android:id="@+id/menu_trusted_contacts"
+        android:title="Trusted Contacts" />
+</menu>
