@@ -10,7 +10,8 @@ data class NavigationCue(
     val estimatedTimeRemaining: Long,
     val destinationName: String,
     val totalDistance: Int,
-    val bearing: Float
+    val bearing: Float,
+    val pointIndex: Int = -1 // Index in routePoints where this cue ends
 ) {
 
     fun toJson(): String {

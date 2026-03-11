@@ -12,22 +12,24 @@ import androidx.preference.PreferenceManager
 import com.google.android.gms.location.LocationServices
 import org.json.JSONArray
 
-class SosManager(private val activity: Activity) {
+class SosManager(private val context: Context) {
 
-    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-    fun sendSos() {
+    fun sendSos(activity: Activity? = null) {
         val permissions = arrayOf(
             Manifest.permission.SEND_SMS,
             Manifest.permission.ACCESS_FINE_LOCATION
         )
 
         val missingPermissions = permissions.filter {
-            ContextCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
 
         if (missingPermissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), 1001)
+            activity?.let {
+                ActivityCompat.requestPermissions(it, missingPermissions.toTypedArray(), 1001)
+            }
             return
         }
 
@@ -47,11 +49,11 @@ class SosManager(private val activity: Activity) {
                 val contacts = getTrustedContacts()
 
                 if (contacts.isEmpty()) {
-                    Toast.makeText(activity, "No trusted contacts found!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "No trusted contacts found!", Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }
 
-                val smsManager = activity.getSystemService(SmsManager::class.java)
+                val smsManager = context.getSystemService(SmsManager::class.java)
                 var sentCount = 0
                 for (contact in contacts) {
                     try {
@@ -62,15 +64,15 @@ class SosManager(private val activity: Activity) {
                     }
                 }
 
-                Toast.makeText(activity, "SOS sent to $sentCount contacts!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "SOS sent to $sentCount contacts!", Toast.LENGTH_SHORT).show()
             }
         } catch (e: SecurityException) {
-            Toast.makeText(activity, "Permission denied for SOS", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Permission denied for SOS", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun getTrustedContacts(): List<Contact> {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val contactsJson = prefs.getString("trusted_contacts_v3", "[]")
         val contacts = mutableListOf<Contact>()
         try {

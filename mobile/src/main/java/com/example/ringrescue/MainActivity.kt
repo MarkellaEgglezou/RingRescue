@@ -4,9 +4,9 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -35,12 +35,14 @@ class MainActivity : AppCompatActivity() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private val useMockLocation = true
-    private val mockLat = 52.379214
-    private val mockLon = 4.897982
+    private var mockLat = 52.379189
+    private var mockLon = 4.899431
+    private var mockMovementJob: Job? = null
 
     private var userMarker: Marker? = null
     private var destinationMarker: Marker? = null
     private var hasArrived = false
+    private var isNavigating = false
 
     private lateinit var instructionText: TextView
     private lateinit var distanceText: TextView
@@ -51,7 +53,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnStartNav: Button
     private lateinit var btnSOS: Button
     
-    // Footer views
     private lateinit var footerNavigation: View
     private lateinit var footerDeviceInfo: View
     private lateinit var footerTrustedContacts: View
@@ -62,11 +63,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         MapLibre.getInstance(this)
-
         setContentView(R.layout.activity_main)
 
         mapView = findViewById(R.id.mapView)
-
         instructionText = findViewById(R.id.instructionText)
         distanceText = findViewById(R.id.distanceText)
         streetText = findViewById(R.id.streetText)
@@ -85,95 +84,130 @@ class MainActivity : AppCompatActivity() {
 
         val graphhopper = GraphhopperService("e8d1e0f8-1e9e-4034-bc2f-25153ec6bcc1")
         wearService = PhoneWearService(this)
-
         controller = NavigationController(graphhopper, wearService)
 
         setupFooter()
 
         btnSOS.setOnClickListener {
-            sosManager.sendSos()
+            sosManager.sendSos(this)
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                1
-            )
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
         }
 
         mapView.getMapAsync { map ->
-            map.setStyle(
-                Style.Builder().fromUri(
-                    "https://tiles.openfreemap.org/styles/liberty"
-                )
-            ) { style ->
+            map.setStyle(Style.Builder().fromUri("https://tiles.openfreemap.org/styles/liberty")) { style ->
                 observeRoute(style)
                 startLocationUpdates(map)
 
                 btnStartNav.setOnClickListener {
-                    val lat = destLatInput.text.toString().toDoubleOrNull() ?: 0.0
-                    val lon = destLonInput.text.toString().toDoubleOrNull() ?: 0.0
-
-                    scope.launch {
-                        val startLat: Double
-                        val startLon: Double
-
-                        if (useMockLocation) {
-                            startLat = mockLat
-                            startLon = mockLon
-                        } else {
-                            var loc = locationService.location.value
-                            while (loc == null) {
-                                delay(500)
-                                loc = locationService.location.value
-                            }
-                            startLat = loc.latitude
-                            startLon = loc.longitude
-                        }
-
-                        controller.startNavigation(startLat, startLon, lat, lon)
-                        
-                        hasArrived = false
-                        val destLatLng = LatLng(lat, lon)
-                        if (destinationMarker == null) {
-                            destinationMarker = map.addMarker(
-                                MarkerOptions()
-                                    .position(destLatLng)
-                                    .title("Destination")
-                            )
-                        } else {
-                            destinationMarker?.position = destLatLng
-                        }
-
-                        navigationPanel.visibility = View.VISIBLE
-                        
-                        map.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                LatLng(startLat, startLon),
-                                15.0
-                            )
-                        )
+                    if (isNavigating) {
+                        stopNavigation()
+                    } else {
+                        startNavigation(map)
                     }
                 }
             }
         }
     }
 
-    private fun setupFooter() {
-        // Highlight active tab icon color
-        findViewById<ImageView>(R.id.footer_navigation_icon).setColorFilter(getColor(R.color.primary_red))
+    private fun startNavigation(map: MapLibreMap) {
+        val lat = destLatInput.text.toString().toDoubleOrNull() ?: 52.3732
+        val lon = destLonInput.text.toString().toDoubleOrNull() ?: 4.8924
+        
+        btnStartNav.isEnabled = false
+        btnStartNav.text = "Loading..."
 
-        footerNavigation.setOnClickListener {
-            // Already on navigation page
+        scope.launch {
+            try {
+                val startLat: Double
+                val startLon: Double
+
+                if (useMockLocation) {
+                    startLat = mockLat
+                    startLon = mockLon
+                } else {
+                    var loc = locationService.location.value
+                    withTimeoutOrNull(5000) {
+                        while (loc == null) {
+                            delay(500)
+                            loc = locationService.location.value
+                        }
+                    }
+                    startLat = loc?.latitude ?: mockLat
+                    startLon = loc?.longitude ?: mockLon
+                }
+
+                val route = controller.startNavigation(startLat, startLon, lat, lon)
+                
+                isNavigating = true
+                NavigationRepository.setNavigating(true)
+                hasArrived = false
+                
+                val destLatLng = LatLng(lat, lon)
+                if (destinationMarker == null) {
+                    destinationMarker = map.addMarker(MarkerOptions().position(destLatLng).title("Destination"))
+                } else {
+                    destinationMarker?.position = destLatLng
+                }
+
+                navigationPanel.visibility = View.VISIBLE
+                btnStartNav.text = "Stop"
+                btnStartNav.isEnabled = true
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(startLat, startLon), 15.0))
+
+                if (useMockLocation) {
+                    startMockMovement(route)
+                }
+                
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Navigation Error", e)
+                Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                btnStartNav.isEnabled = true
+                btnStartNav.text = "Start"
+            }
         }
-        footerDeviceInfo.setOnClickListener {
-            showDeviceInfo()
+    }
+
+    private fun stopNavigation() {
+        isNavigating = false
+        mockMovementJob?.cancel()
+        controller.stopNavigation()
+        NavigationRepository.setNavigating(false)
+        navigationPanel.visibility = View.GONE
+        btnStartNav.text = "Start"
+        destinationMarker?.let { it.remove() }
+        destinationMarker = null
+        
+        // Remove route from map
+        mapView.getMapAsync { map ->
+            map.getStyle { style ->
+                style.removeLayer("route-layer")
+                style.removeSource("route-source")
+            }
         }
+    }
+
+    private fun startMockMovement(route: NavigationRoute) {
+        mockMovementJob?.cancel()
+        mockMovementJob = scope.launch {
+            var currentIndex = 0
+            while (isActive && currentIndex < route.points.size && !hasArrived) {
+                val point = route.points[currentIndex]
+                mockLat = point.first
+                mockLon = point.second
+                
+                delay(1000) // Move every second
+                currentIndex++
+            }
+        }
+    }
+
+    private fun setupFooter() {
+        findViewById<ImageView>(R.id.footer_navigation_icon).setColorFilter(getColor(R.color.primary_red))
+        footerNavigation.setOnClickListener { }
+        footerDeviceInfo.setOnClickListener { showDeviceInfo() }
         footerTrustedContacts.setOnClickListener {
             startActivity(Intent(this, TrustedContactsActivity::class.java))
         }
@@ -183,45 +217,28 @@ class MainActivity : AppCompatActivity() {
         scope.launch {
             val isConnected = wearService.isWatchConnected()
             val batteryLevel = wearService.getWatchBatteryLevel()
-            
-            val message = if (isConnected) {
-                "Watch is connected.\nBattery Level: ${batteryLevel ?: "Unknown"}%"
-            } else {
-                "Watch is disconnected."
-            }
-
-            AlertDialog.Builder(this@MainActivity)
-                .setTitle("Device Information")
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .show()
+            val message = if (isConnected) "Watch is connected.\nBattery Level: ${batteryLevel ?: "Unknown"}%" else "Watch is disconnected."
+            AlertDialog.Builder(this@MainActivity).setTitle("Device Information").setMessage(message).setPositiveButton("OK", null).show()
         }
     }
 
     private fun observeRoute(style: Style) {
         scope.launch {
             controller.route.collect { route ->
-                route?.let {
-                    drawRoute(style, it.points)
+                if (route != null) {
+                    drawRoute(style, route.points)
                 }
             }
         }
     }
 
     private fun startLocationUpdates(map: MapLibreMap) {
-
         locationService.start()
-
         scope.launch {
             locationService.location.collect { location ->
-
-                val currentLat: Double
-                val currentLon: Double
                 val activeLocation: Location
 
                 if (useMockLocation) {
-                    currentLat = mockLat
-                    currentLon = mockLon
                     activeLocation = Location("mock").apply {
                         latitude = mockLat
                         longitude = mockLon
@@ -230,86 +247,72 @@ class MainActivity : AppCompatActivity() {
                     }
                 } else {
                     if (location == null) return@collect
-                    currentLat = location.latitude
-                    currentLon = location.longitude
                     activeLocation = location
                 }
 
-                val latLng = LatLng(currentLat, currentLon)
-
-                map.easeCamera(
-                    CameraUpdateFactory.newLatLng(latLng)
-                )
+                val latLng = LatLng(activeLocation.latitude, activeLocation.longitude)
+                map.easeCamera(CameraUpdateFactory.newLatLng(latLng))
 
                 if (userMarker == null) {
-                    userMarker = map.addMarker(
-                        MarkerOptions()
-                            .position(latLng)
-                            .title("You")
-                    )
+                    userMarker = map.addMarker(MarkerOptions().position(latLng).title("You"))
                 } else {
                     userMarker!!.position = latLng
                 }
 
-                controller.updateLocation(activeLocation)
+                if (isNavigating) {
+                    controller.updateLocation(activeLocation)
 
-                if (!hasArrived && destinationMarker != null) {
-                    val dist = controller.distanceToDestination(activeLocation)
-                    if (dist < 30.0) { // 30 meters threshold
-                        hasArrived = true
-                        showArrivalDialog()
+                    if (!hasArrived && destinationMarker != null) {
+                        val dist = controller.distanceToDestination(activeLocation)
+                        if (dist < 30.0) {
+                            hasArrived = true
+                            showArrivalDialog()
+                        }
                     }
-                }
 
-                val cue = controller.getCurrentCue()
-                cue?.let {
-                    instructionText.text = it.instruction
-                    distanceText.text = "${it.distanceToNextTurn} m"
-                    streetText.text = it.nextStreet
+                    val route = controller.route.value
+                    val cue = controller.getCurrentCue()
+                    if (cue != null && route != null) {
+                        val nextPoint = controller.getNextManeuverPoint()
+                        if (nextPoint != null) {
+                            val distToTurn = controller.distance(activeLocation.latitude, activeLocation.longitude, nextPoint.first, nextPoint.second)
+                            
+                            instructionText.text = cue.instruction
+                            distanceText.text = "${distToTurn.toInt()} m"
+                            streetText.text = cue.nextStreet
+                            
+                            val updatedCue = cue.copy(distanceToNextTurn = distToTurn.toInt())
+                            NavigationRepository.updateCue(updatedCue)
+                            controller.sendCueToWear(cue, distToTurn.toInt())
+                        }
+                    }
                 }
             }
         }
     }
 
     private fun showArrivalDialog() {
+        stopNavigation()
         AlertDialog.Builder(this)
             .setTitle("Arrived")
             .setMessage("You have reached your destination!")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
-                navigationPanel.visibility = View.GONE
             }
             .show()
     }
 
-    private fun drawRoute(
-        style: Style,
-        points: List<Pair<Double, Double>>
-    ) {
-        val line = LineString.fromLngLats(
-            points.map {
-                Point.fromLngLat(
-                    it.second,
-                    it.first
-                )
-            }
-        )
-
+    private fun drawRoute(style: Style, points: List<Pair<Double, Double>>) {
+        val line = LineString.fromLngLats(points.map { Point.fromLngLat(it.second, it.first) })
         val sourceId = "route-source"
         val layerId = "route-layer"
-
         val source = style.getSourceAs<GeoJsonSource>(sourceId)
         if (source != null) {
             source.setGeoJson(line.toJson())
         } else {
             val newSource = GeoJsonSource(sourceId, line.toJson())
             style.addSource(newSource)
-
-            val layer = LineLayer(layerId, sourceId)
-                .withProperties(
-                    lineColor(getColor(R.color.primary_red)),
-                    lineWidth(6f)
-                )
+            val layer = LineLayer(layerId, sourceId).withProperties(lineColor(getColor(R.color.primary_red)), lineWidth(6f))
             style.addLayer(layer)
         }
     }

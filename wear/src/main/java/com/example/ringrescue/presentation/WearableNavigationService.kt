@@ -1,6 +1,7 @@
 package com.example.ringrescue.presentation
 
 import android.content.Context
+import android.util.Log
 import com.google.android.gms.wearable.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,20 +23,24 @@ class WearableNavigationService(private val context: Context,
         CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val messageListener = MessageClient.OnMessageReceivedListener { messageEvent ->
+        Log.d("WearNavService", "Message received: ${messageEvent.path}")
         when (messageEvent.path) {
             "/navigation_cue" -> {
                 try {
                     val cueJson = String(messageEvent.data)
+                    Log.d("WearNavService", "Cue data: $cueJson")
                     val cue = NavigationCue.fromJson(cueJson)
                     _navigationCue.value = cue
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e("WearNavService", "Error parsing cue", e)
                 }
             }
             "/navigation_started" -> {
+                Log.d("WearNavService", "Navigation started signal received")
                 _connectionStatus.value = ConnectionStatus.NAVIGATING
             }
             "/navigation_ended" -> {
+                Log.d("WearNavService", "Navigation ended signal received")
                 _connectionStatus.value = ConnectionStatus.CONNECTED
                 _navigationCue.value = null
             }
@@ -55,18 +60,18 @@ class WearableNavigationService(private val context: Context,
                 messageClient?.removeListener(messageListener)
                 messageClient?.addListener(messageListener)
 
-                // Check for connected nodes
                 val nodes = nodeClient?.connectedNodes?.await()
+                Log.d("WearNavService", "Connected nodes: ${nodes?.size}")
+                
                 _connectionStatus.value = if (nodes?.isNotEmpty() == true) {
                     ConnectionStatus.CONNECTED
                 } else {
                     ConnectionStatus.DISCONNECTED
                 }
 
-                // Request current navigation state
                 sendMessage("/request_navigation_state", byteArrayOf())
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("WearNavService", "Initialization error", e)
                 _connectionStatus.value = ConnectionStatus.DISCONNECTED
             }
         }
@@ -75,9 +80,7 @@ class WearableNavigationService(private val context: Context,
     private fun simulateNavigation() {
         coroutineScope.launch {
             _connectionStatus.value = ConnectionStatus.NAVIGATING
-
             delay(2000)
-
             _navigationCue.value = NavigationCue(
                 instruction = "Turn right",
                 distanceToNextTurn = 120,
@@ -87,19 +90,6 @@ class WearableNavigationService(private val context: Context,
                 destinationName = "University",
                 totalDistance = 2500,
                 bearing = 90f
-            )
-
-            delay(5000)
-
-            _navigationCue.value = NavigationCue(
-                instruction = "Continue straight",
-                distanceToNextTurn = 500,
-                nextStreet = "Broadway",
-                maneuverType = ManeuverType.STRAIGHT,
-                estimatedTimeRemaining = 480,
-                destinationName = "University",
-                totalDistance = 2000,
-                bearing = 0f
             )
         }
     }
@@ -119,11 +109,15 @@ class WearableNavigationService(private val context: Context,
     private suspend fun sendMessage(path: String, data: ByteArray) {
         try {
             val nodes = nodeClient?.connectedNodes?.await()
+            if (nodes.isNullOrEmpty()) {
+                Log.w("WearNavService", "No nodes to send message $path")
+            }
             nodes?.forEach { node ->
+                Log.d("WearNavService", "Sending $path to ${node.id}")
                 messageClient?.sendMessage(node.id, path, data)?.await()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("WearNavService", "Error sending message $path", e)
         }
     }
 
@@ -134,6 +128,7 @@ class WearableNavigationService(private val context: Context,
 
     fun sendSosSignal() {
         coroutineScope.launch {
+            Log.d("WearNavService", "Sending SOS signal")
             sendMessage("/sos_signal", "SOS".toByteArray())
         }
     }
