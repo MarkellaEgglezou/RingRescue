@@ -10,7 +10,8 @@ import kotlin.math.*
 
 class NavigationController(
     private val graphhopperService: GraphhopperService,
-    private val wearService: PhoneWearService
+    private val wearService: PhoneWearService,
+    private val safetyEvaluator: SafetyEvaluator
 ) {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -39,27 +40,42 @@ class NavigationController(
 
         wearService.sendNavigationStarted()
 
-        val navigationRoute = graphhopperService.getRoute(
+        // Fetch multiple routes using different profiles
+        val routes = graphhopperService.getRoutes(
             startLat,
             startLon,
             endLat,
-            endLon
+            endLon,
+            maxPaths = 3
         )
 
-        routePoints = navigationRoute.points
+        // Rank by street safety scores
+        routes.forEach { r ->
+            val names = r.cues.map { it.nextStreet }
+            val distances = r.cues.map { it.distanceToNextTurn }
+            r.safetyScore = safetyEvaluator.calculateRouteSafety(names, distances)
+            Log.d("NavigationController", "Route safety score: ${r.safetyScore}")
+        }
+
+        // Choose safest route
+        val safestRoute = routes.maxByOrNull { it.safetyScore } ?: routes.first()
+        
+        Log.d("NavigationController", "Selected safest route with score: ${safestRoute.safetyScore}")
+
+        routePoints = safestRoute.points
         destinationLat = endLat
         destinationLon = endLon
-        cues = navigationRoute.cues
+        cues = safestRoute.cues
         currentCueIndex = 0
         closestPointIndex = 0
 
-        _route.value = navigationRoute
+        _route.value = safestRoute
 
         if (cues.isNotEmpty()) {
             sendCueToWear(cues[0])
         }
 
-        return navigationRoute
+        return safestRoute
     }
 
     fun stopNavigation() {
@@ -77,7 +93,6 @@ class NavigationController(
     fun updateLocation(location: Location) {
         if (routePoints.isEmpty() || isRerouting || currentCueIndex >= cues.size) return
 
-        // Find closest point on route to track progress
         var minDist = Double.MAX_VALUE
         var bestIndex = closestPointIndex
         
@@ -93,14 +108,12 @@ class NavigationController(
         }
         closestPointIndex = bestIndex
 
-        // Check if the user is off-course
         if (minDist > OFF_COURSE_THRESHOLD_METERS) {
             Log.d("NavigationController", "Off-course detected (dist: $minDist). Triggering reroute.")
             triggerReroute(location)
             return
         }
 
-        // Advance to next cue if we reached the maneuver point index
         val currentCue = getCurrentCue()
         if (currentCue != null && closestPointIndex >= currentCue.pointIndex) {
             advanceToNextCue()
@@ -146,10 +159,6 @@ class NavigationController(
         } else {
             cue
         }
-        
-        // We only want to log/send if it's a significant change to avoid flooding
-        // But for the watch to match exactly, we send updates. 
-        // We can add a simple check to not send the exact same cue+dist twice.
         
         scope.launch {
             wearService.sendCue(cueToSend)

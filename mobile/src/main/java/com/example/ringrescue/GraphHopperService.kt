@@ -2,6 +2,8 @@ package com.example.ringrescue
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -11,56 +13,90 @@ class GraphhopperService(private val apiKey: String) {
 
     private val client = OkHttpClient()
 
-    suspend fun getRoute(
+    /**
+     * Fetches multiple routes using different bike profiles.
+     * Note: 'details=osm_id' is removed as it often triggers "Flexible Mode" 
+     * which is not available on GraphHopper's free tier.
+     */
+    suspend fun getRoutes(
         startLat: Double,
         startLon: Double,
         endLat: Double,
-        endLon: Double
-    ): NavigationRoute = withContext(Dispatchers.IO) {
+        endLon: Double,
+        maxPaths: Int = 3
+    ): List<NavigationRoute> = withContext(Dispatchers.IO) {
 
-        val url =
-            "https://graphhopper.com/api/1/route?" +
-                    "point=$startLat,$startLon&" +
-                    "point=$endLat,$endLon&" +
-                    "profile=bike&instructions=true&points_encoded=false&key=$apiKey"
+        // Try standard profiles allowed on the free tier.
+        val profiles = listOf("bike", "mtb", "racingbike").take(maxPaths)
+        
+        val deferredRoutes = profiles.map { profile ->
+            async {
+                try {
+                    fetchSingleRoute(startLat, startLon, endLat, endLon, profile)
+                } catch (e: Exception) {
+                    Log.e("GraphhopperService", "Failed to fetch route for profile $profile: ${e.message}")
+                    null
+                }
+            }
+        }
 
-        Log.d("GraphhopperService", "Requesting route: $url")
+        val results = deferredRoutes.awaitAll().filterNotNull()
+        
+        if (results.isEmpty()) {
+            // Last resort: try a very basic request with just 'bike'
+            try {
+                listOf(fetchSingleRoute(startLat, startLon, endLat, endLon, "bike", includeDetails = false))
+            } catch (e: Exception) {
+                Log.e("GraphhopperService", "Final fallback failed: ${e.message}")
+                throw Exception("No routes found: ${e.message}")
+            }
+        } else {
+            results
+        }
+    }
+
+    private fun fetchSingleRoute(
+        startLat: Double,
+        startLon: Double,
+        endLat: Double,
+        endLon: Double,
+        profile: String,
+        includeDetails: Boolean = false // Set to false by default for free tier compatibility
+    ): NavigationRoute {
+        var url = "https://graphhopper.com/api/1/route?" +
+                "point=$startLat,$startLon&" +
+                "point=$endLat,$endLon&" +
+                "profile=$profile&instructions=true&points_encoded=false&key=$apiKey"
+        
+        // Only add details if explicitly requested, as it might trigger Flexible Mode
+        if (includeDetails) {
+            url += "&details=osm_id"
+        }
+
+        Log.d("GraphhopperService", "Requesting route ($profile): $url")
 
         val request = Request.Builder().url(url).build()
         val response = client.newCall(request).execute()
         val responseBody = response.body?.string() ?: ""
 
         if (!response.isSuccessful) {
-            Log.e("GraphhopperService", "Error response: $responseBody")
-            val errorJson = JSONObject(responseBody)
-            val message = if (errorJson.has("message")) {
-                errorJson.getString("message")
-            } else if (errorJson.has("hints")) {
-                errorJson.getJSONArray("hints").getJSONObject(0).getString("message")
-            } else {
-                "Unknown API error"
+            val message = try {
+                val json = JSONObject(responseBody)
+                if (json.has("message")) json.getString("message") else "API Error ${response.code}"
+            } catch (e: Exception) {
+                "HTTP ${response.code}"
             }
             throw Exception(message)
         }
 
         val json = JSONObject(responseBody)
-
-        if (!json.has("paths")) {
-            Log.e("GraphhopperService", "No 'paths' found in JSON: $responseBody")
-            throw Exception("No route found between these points.")
-        }
-
-        val paths = json.getJSONArray("paths")
-        val path = paths.getJSONObject(0)
-
+        val path = json.getJSONArray("paths").getJSONObject(0)
+        
         val instructions = path.getJSONArray("instructions")
-
         val cues = mutableListOf<NavigationCue>()
 
         for (i in 0 until instructions.length()) {
-
             val ins = instructions.getJSONObject(i)
-
             val maneuver = when (ins.getInt("sign")) {
                 -3 -> ManeuverType.TURN_SHARP_LEFT
                 -2 -> ManeuverType.TURN_LEFT
@@ -74,9 +110,6 @@ class GraphhopperService(private val apiKey: String) {
                 else -> ManeuverType.STRAIGHT
             }
 
-            val interval = ins.getJSONArray("interval")
-            val endPointIndex = interval.getInt(1)
-
             cues.add(
                 NavigationCue(
                     instruction = ins.getString("text"),
@@ -87,27 +120,37 @@ class GraphhopperService(private val apiKey: String) {
                     destinationName = "Destination",
                     totalDistance = path.getDouble("distance").toInt(),
                     bearing = ins.optDouble("heading", 0.0).toFloat(),
-                    pointIndex = endPointIndex
+                    pointIndex = ins.getJSONArray("interval").getInt(1)
                 )
             )
         }
 
-        val coordinates =
-            path.getJSONObject("points")
-                .getJSONArray("coordinates")
-
+        val coordinates = path.getJSONObject("points").getJSONArray("coordinates")
         val routePoints = mutableListOf<Pair<Double, Double>>()
-
         for (i in 0 until coordinates.length()) {
-
             val coord = coordinates.getJSONArray(i)
-
-            val lon = coord.getDouble(0)
-            val lat = coord.getDouble(1)
-
-            routePoints.add(Pair(lat, lon))
+            routePoints.add(Pair(coord.getDouble(1), coord.getDouble(0)))
         }
 
-        NavigationRoute(cues, routePoints)
+        val segments = mutableListOf<RouteSegment>()
+        if (path.has("details") && path.getJSONObject("details").has("osm_id")) {
+            val osmIds = path.getJSONObject("details").getJSONArray("osm_id")
+            for (i in 0 until osmIds.length()) {
+                val detail = osmIds.getJSONArray(i)
+                val osmId = detail.getLong(2)
+                segments.add(RouteSegment(osmId, 1.0))
+            }
+        }
+
+        return NavigationRoute(cues, routePoints, segments)
+    }
+
+    suspend fun getRoute(
+        startLat: Double,
+        startLon: Double,
+        endLat: Double,
+        endLon: Double
+    ): NavigationRoute {
+        return getRoutes(startLat, startLon, endLat, endLon, 1).first()
     }
 }

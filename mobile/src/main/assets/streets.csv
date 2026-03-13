@@ -1,0 +1,963 @@
+osm_way_id,street_name,road_type
+4264947,unknown,cycleway
+4270806,Roomtuintjes,cycleway
+4641546,unknown,cycleway
+4984557,unknown,cycleway
+7044804,Stuurmankade,residential
+7044806,Feike de Boerlaan,residential
+7044817,Sumatrastraat,residential
+7044819,Tidorestraat,residential
+7044820,Valentijnkade,residential
+7044822,Ceramplein,residential
+7044824,Insulindeweg,residential
+7044826,Insulindeweg,residential
+7044828,Galileïplantsoen,residential
+7044833,Niasstraat,residential
+7044834,Karimatastraat,residential
+7044835,Th. K. van Lohuizenlaan,tertiary
+7044836,Javaplantsoen,residential
+7044838,Boetonstraat,residential
+7044840,Makassarstraat,residential
+7044842,Gorontalostraat,residential
+7044846,Cruquiusweg,tertiary
+7044847,Bataviastraat,residential
+7044850,Th. K. van Lohuizenlaan,tertiary
+7044852,Bataviastraat,residential
+7044857,Insulindeweg,residential
+7044860,Semarangstraat,residential
+7044863,Soembawastraat,residential
+7044865,Tweede Ceramstraat,residential
+7044866,Kramatweg,residential
+7044871,Soembawastraat,cycleway
+7044877,Makassarstraat,residential
+7044879,Baweanstraat,residential
+7044883,Th. K. van Lohuizenlaan,tertiary
+7044886,Th. K. van Lohuizenlaan,tertiary
+7044890,Borneokade,residential
+7044891,Th. K. van Lohuizenlaan,tertiary
+7044901,Ternatestraat,residential
+7044905,Kramatweg,residential
+7044911,Menadostraat,residential
+7044921,Kramatweg,residential
+7044928,Gorontalostraat,residential
+7044940,Tidorestraat,residential
+7044961,Tidorestraat,cycleway
+7044969,Archimedeslaan,residential
+7044991,Semarangstraat,residential
+7044996,Kramatweg,residential
+7044998,Bataviastraat,residential
+7045000,Semarangstraat,residential
+7045004,Ooster Ringdijk,cycleway
+7045010,Valentijnkade,residential
+7045022,Archimedeslaan,residential
+7045060,Mataramstraat,residential
+7045063,R.J.H. Fortuynplein,residential
+7045065,Stokerkade,residential
+7045066,Kwartiermeesterstraat,residential
+7045074,Scheepstimmermanstraat,residential
+7045114,R.J.H. Fortuynstraat,residential
+7045117,R.J.H. Fortuynstraat,residential
+7045132,Feike de Boerlaan,residential
+7045149,R.J.H. Fortuynstraat,residential
+7045166,Feike de Boerlaan,residential
+7045174,Hofmeesterstraat,residential
+7045185,R.J.H. Fortuynplein,residential
+7045206,Borneokade,residential
+7045247,Molukkenstraat,secondary
+7045269,Zuiderzeeweg,secondary
+7045311,Zeeburgerdijk,tertiary
+7045354,Domselaerstraat,residential
+7045356,Oetewalerpad,cycleway
+7045357,Ringdijk,residential
+7045371,Mr. P.N. Arntzeniusweg,residential
+7045381,Johann Keplerstraat,residential
+7045400,Hogeweg,residential
+7045401,Sumatrastraat,residential
+7045402,Riouwstraat,residential
+7045404,Riouwstraat,residential
+7045407,Pieter Nieuwlandstraat,residential
+7045408,Dapperplein,residential
+7045410,Tweede Atjehstraat,residential
+7045412,Eerste Atjehstraat,residential
+7045413,Haroekoestraat,residential
+7045416,Eerste Atjehstraat,residential
+7045418,Eerste Atjehstraat,residential
+7045431,Pythagorasstraat,residential
+7045443,Bredeweg,residential
+7045445,Linnaeuskade,residential
+7045447,Bredeweg,residential
+7045452,Hogeweg,residential
+7045453,Newtonstraat,residential
+7045466,Laplacestraat,residential
+7045473,Borneostraat,residential
+7045481,Madurastraat,residential
+7045483,Borneostraat,residential
+7045485,Djambistraat,residential
+7045487,Linnaeusparkweg,residential
+7045491,Linnaeusparkweg,residential
+7045496,Ptolemaeusstraat,residential
+7045497,Hogeweg,cycleway
+7045510,Linnaeuskade,residential
+7045516,Archimedesweg,residential
+7045523,Minahassastraat,residential
+7045524,Minahassastraat,residential
+7045527,Oosterspoorplein,residential
+7045528,Oetewalerpad,cycleway
+7045531,Oosterspoorplein,cycleway
+7045532,Halmaheirastraat,residential
+7045539,Oosterspoorplein,residential
+7045541,Celebesstraat,residential
+7045542,Oosterspoorplein,residential
+7045547,Formosastraat,residential
+7045552,J.C. Breenstraat,residential
+7045554,Polderweg,residential
+7045566,Boniplein,residential
+7045570,Ter Gouwstraat,residential
+7045571,Halmaheirastraat,residential
+7045573,Woltera van Reesstraat,cycleway
+7045574,Oosterspoorplein,cycleway
+7045575,Sumatrastraat,residential
+7045576,Boniplein,residential
+7045577,Nic. de Roeverstraat,residential
+7045583,Bonistraat,residential
+7045584,Oetewalerstraat,residential
+7045587,Palembangstraat,residential
+7045591,Oosterspoorplein,cycleway
+7045596,Madurastraat,residential
+7045604,Javaplein,residential
+7045606,Javaplein,residential
+7045615,Insulindeweg,residential
+7045618,Pontanusstraat,residential
+7045620,Toministraat,residential
+7045625,Dapperstraat,residential
+7045626,Dapperstraat,residential
+7045631,Van der Vijverstraat,residential
+7045637,Sibogastraat,residential
+7045640,Hajo Brugmanshof,residential
+7045641,Ombilinstraat,residential
+7045644,Hajo Brugmanshof,residential
+7045656,Benkoelenstraat,residential
+7045662,Langkatstraat,residential
+7045668,Hajo Brugmanshof,residential
+7045691,Molukkenstraat,secondary
+7045693,Molukkenstraat,secondary
+7045702,Von Zesenstraat,residential
+7045703,Zeeburgerdijk,primary
+7045705,Zeeburgerdijk,primary
+7045719,Timorplein,residential
+7045727,Zeeburgerdijk,residential
+7045732,Roomtuintjes,residential
+7045735,Panamalaan,cycleway
+7045739,Bankastraat,residential
+7045741,Delistraat,residential
+7045748,Czaar Peterstraat,residential
+7045749,Cruquiusstraat,residential
+7045756,C. van Eesterenlaan,tertiary
+7045760,Tweede Leeghwaterstraat,residential
+7045761,Eerste Leeghwaterstraat,residential
+7045762,Conradstraat,residential
+7045772,Veemarkt,residential
+7045776,Cruquiuskade,tertiary
+7045780,Veelaan,tertiary
+7045786,Lombokstraat,residential
+7045792,Padangstraat,residential
+7045809,Lampongstraat,residential
+7045812,Veelaan,tertiary
+7045818,Zeeburgerpad,residential
+7045823,Veemarkt,residential
+7045825,Veemarkt,residential
+7045838,C. van Eesterenlaan,tertiary
+7045839,C. van Eesterenlaan,tertiary
+7045851,C. van Eesterenlaan,tertiary
+7045855,Veemarkt,residential
+7045856,Veemarkt,residential
+7045858,Cruquiusstraat,residential
+7045865,C. van Eesterenlaan,tertiary
+7045869,Blauwpijpstraat,residential
+7045872,Borneolaan,residential
+7045879,Borneolaan,residential
+7045882,Lijndenstraat,residential
+7045884,Blankenstraat,residential
+7045885,Borneolaan,residential
+7045895,Veemarkt,residential
+7045896,Veemarkt,residential
+7045898,Veemarkt,residential
+7045905,Cruquiusweg,tertiary
+7045908,Veelaan,tertiary
+7045909,Cruquiusweg,tertiary
+7045911,Veemarkt,residential
+7045915,Cruquiusweg,tertiary
+7045923,Borneolaan,tertiary
+7045925,Molukkenstraat,tertiary
+7045928,Borneolaan,tertiary
+7045940,Cruquiuskade,tertiary
+7045941,Panamalaan,primary
+7045942,Panamalaan,primary
+7045944,Panamalaan,primary
+7045946,Panamalaan,primary
+7045952,Panamalaan,primary
+7045953,Panamalaan,primary
+7045956,Panamalaan,primary
+7045957,Panamalaan,primary
+7045961,Panamalaan,primary
+7045962,Panamalaan,primary
+7045963,Panamalaan,primary
+7045973,Cruquiusweg,tertiary
+7045975,Zeeburgerdijk,primary
+7045990,Panamalaan,primary
+7045995,Mauritskade,primary
+7045996,Mauritskade,primary
+7046015,Pontanusstraat,residential
+7046024,Pieter Vlamingstraat,residential
+7046028,Jacob Burggraafstraat,residential
+7046036,Waaigat,residential
+7046039,Parelstraat,residential
+7046044,Waaigat,residential
+7046052,Pontanusstraat,residential
+7046055,Kruithuisstraat,residential
+7046057,Ir. Jakoba Mulderplein,residential
+7046058,unknown,cycleway
+7046064,Ir. Jakoba Mulderplein,residential
+7046067,Ir. Jakoba Mulderplein,residential
+7046072,Entrepotdok,cycleway
+7046073,unknown,residential
+7046078,Sarphatistraat,tertiary
+7046094,Oostenburgergracht,residential
+7046095,Kruithuisstraat,residential
+7046096,Kruithuisstraat,residential
+7046107,Tweede Coehoornstraat,cycleway
+7046116,Czaar Peterstraat,residential
+7046119,Czaar Peterstraat,residential
+7046126,unknown,cycleway
+7046134,Oostenburgerpark,cycleway
+7046135,Admiraliteitstraat,residential
+7046140,Conradstraat,residential
+7046142,Compagniestraat,cycleway
+7046145,Oostenburgervoorstraat,residential
+7046147,Boulevardpad,residential
+7046151,Oostenburgerpark,residential
+7046155,Wittenburgerkade,residential
+7046161,Grote Wittenburgerstraat,residential
+7046168,Tweede Wittenburgerdwarsstraat,residential
+7046175,Touwbaan,residential
+7046177,Eerste Coehoornstraat,cycleway
+7046185,Bootstraat,residential
+7046193,Poolstraat,residential
+7046203,Grote Wittenburgerstraat,residential
+7046204,Parelstraat,residential
+7046215,Oesjesduiker,tertiary
+7046218,unknown,tertiary
+7046223,Sarphatistraat,tertiary
+7046226,Zeeburgerstraat,tertiary
+7046233,Zeeburgerdijk,tertiary
+7046283,Eikenweg,residential
+7046285,Tweede Oosterparkstraat,residential
+7046291,Magersfonteinstraat,residential
+7046292,Pretoriusstraat,residential
+7046301,Cilliersstraat,residential
+7046303,Retiefstraat,residential
+7046343,Paardekraalstraat,residential
+7046346,Retiefstraat,residential
+7046353,Spitskopstraat,residential
+7046361,Ingogostraat,residential
+7046366,Louise Wentstraat,residential
+7046369,Kazernestraat,residential
+7046376,Smitstraat,residential
+7046387,Derde Oosterparkstraat,residential
+7046389,Cilliersstraat,residential
+7046392,Laing's Nekstraat,residential
+7046402,Pretoriusstraat,residential
+7046411,Tweede Oosterparkstraat,residential
+7046413,Kastanjeplein,residential
+7046416,Kastanjeplein,residential
+7046418,Derde Oosterparkstraat,residential
+7046434,Wagenaarstraat,residential
+7046436,Alexanderkade,cycleway
+7046442,Derde Oosterparkstraat,residential
+7046444,Derde Oosterparkstraat,residential
+7046447,Reinwardtstraat,residential
+7046457,Kastanjeweg,residential
+7046459,Tweede Oosterparkstraat,residential
+7046461,Tugelaweg,residential
+7046465,Derde Oosterparkstraat,residential
+7046468,Populierenweg,residential
+7046473,Eikenplein,residential
+7046476,Tweede Oosterparkstraat,residential
+7046478,Kastanjeweg,residential
+7046479,Kastanjeplein,residential
+7046496,Johanna Westerdijkstraat,residential
+7046497,Tweede van Swindenstraat,residential
+7046499,Tweede van Swindenstraat,residential
+7046501,Laing's Nekstraat,residential
+7046518,Commelinstraat,residential
+7046520,Alexanderkade,residential
+7046524,Alexanderplein,residential
+7046541,Van Swindendwarsstraat,residential
+7046544,Pieter Nieuwlandstraat,residential
+7046557,Linnaeusstraat,secondary
+7046561,Linnaeusstraat,secondary
+7046563,Linnaeusstraat,secondary
+7046570,Linnaeusstraat,secondary
+7046573,Oosterpark,tertiary
+7046585,Mauritskade,primary
+7046586,unknown,primary
+10721681,Steve Bikoplein,residential
+13422093,unknown,cycleway
+22118549,Eikenweg,residential
+22987501,Ooster Ringdijk,cycleway
+23247567,Linnaeuskade,residential
+23292514,unknown,cycleway
+23683013,Carolina MacGillavrylaan,tertiary
+26144351,Wijttenbachstraat,secondary
+26144486,Wijttenbachstraat,secondary
+26609074,Pieter Vlamingstraat,residential
+27006392,Toministraat,residential
+27688254,Ezelsbrug,cycleway
+27688255,Poolstraat,cycleway
+29979245,Tweede Leeghwaterstraat,residential
+29979423,Isaac Titsinghkade,residential
+33199224,Cruquiusweg,cycleway
+33471678,unknown,cycleway
+33514270,unknown,cycleway
+33514276,unknown,cycleway
+33514318,unknown,cycleway
+33514339,unknown,cycleway
+33514381,unknown,cycleway
+33790945,unknown,cycleway
+33790946,Th. K. van Lohuizenlaan,cycleway
+33790948,unknown,cycleway
+33827456,Linnaeusplantsoen,cycleway
+33913035,Archimedesweg,secondary
+34145986,Molukkenstraat,secondary
+34181692,unknown,cycleway
+34181693,unknown,cycleway
+34181694,unknown,cycleway
+34181695,unknown,cycleway
+34865089,Eerste Van Swindenstraat,residential
+34865091,Vrolikstraat,residential
+35919080,unknown,cycleway
+35919081,unknown,cycleway
+36592981,unknown,residential
+37283411,unknown,cycleway
+37417484,Wittenburgergracht,tertiary
+37417544,Oostenburgergracht,tertiary
+37417545,unknown,cycleway
+37417546,unknown,cycleway
+37844688,Middenweg,cycleway
+37844689,Linnaeusstraat,cycleway
+38349507,unknown,cycleway
+38349508,Zeeburgerstraat,tertiary
+38349509,unknown,cycleway
+38349510,unknown,cycleway
+38349511,unknown,cycleway
+38358819,Th. K. van Lohuizenlaan,cycleway
+38358820,Th. K. van Lohuizenlaan,cycleway
+38358821,Th. K. van Lohuizenlaan,cycleway
+38358822,Th. K. van Lohuizenlaan,cycleway
+38358823,Th. K. van Lohuizenlaan,cycleway
+38358824,Th. K. van Lohuizenlaan,cycleway
+38358825,Th. K. van Lohuizenlaan,cycleway
+38358826,Th. K. van Lohuizenlaan,cycleway
+38358828,unknown,cycleway
+38358829,unknown,cycleway
+38358832,unknown,cycleway
+38358833,unknown,cycleway
+38358834,unknown,cycleway
+38358835,unknown,cycleway
+38531167,unknown,cycleway
+38531173,Panamalaan,primary
+38531174,Panamalaan,primary
+38531175,Cruquiusweg,tertiary
+38531176,Cruquiusweg,tertiary
+38531179,C. van Eesterenlaan,tertiary
+38531181,C. van Eesterenlaan,tertiary
+38531182,C. van Eesterenlaan,tertiary
+38572017,Dageraadsbrug,tertiary
+38572018,unknown,tertiary
+43278109,Insulindeweg,cycleway
+43278110,Wijttenbachstraat,cycleway
+43278111,Wijttenbachstraat,cycleway
+43278112,Insulindeweg,cycleway
+43278114,Insulindeweg,cycleway
+43278123,Wijttenbachstraat,cycleway
+43278131,Wijttenbachstraat,cycleway
+43281281,Linnaeusstraat,cycleway
+43281350,unknown,cycleway
+43281498,unknown,cycleway
+43285019,unknown,cycleway
+46928171,Lampongstraat,residential
+49042718,Blankenstraat,cycleway
+49042720,Eerste Coehoornstraat,cycleway
+49229549,Lombokstraat,residential
+51571174,unknown,cycleway
+51571175,unknown,cycleway
+59051656,Middenweg,cycleway
+59229057,unknown,cycleway
+59229059,unknown,cycleway
+59229060,unknown,cycleway
+59229061,unknown,cycleway
+59229062,unknown,cycleway
+59229063,unknown,cycleway
+59229064,unknown,cycleway
+59229065,unknown,cycleway
+59229066,Panamalaan,cycleway
+59229067,unknown,cycleway
+60026245,unknown,cycleway
+61130897,Celebesstraat,residential
+65276157,Zeeburgerdijk,cycleway
+65276162,Flevoparkweg,cycleway
+73094302,Zeeburgerdijk,cycleway
+73094305,unknown,cycleway
+73094307,unknown,cycleway
+73094309,Kramatweg,cycleway
+73094311,unknown,cycleway
+73094312,unknown,cycleway
+83187128,Oosterpark,cycleway
+92405265,unknown,tertiary
+93465599,unknown,cycleway
+93465600,Czaar Peterstraat,residential
+112460250,Middenweg,cycleway
+112515062,Soembawastraat,residential
+112515064,Panamalaan,primary
+112515065,Insulindeweg,cycleway
+112515068,Wijttenbachstraat,cycleway
+112515073,Panamalaan,primary
+115632075,unknown,cycleway
+115632078,unknown,cycleway
+115708735,unknown,cycleway
+115708738,unknown,cycleway
+115708739,unknown,cycleway
+115708741,unknown,cycleway
+115708744,unknown,cycleway
+115708745,unknown,cycleway
+115708746,unknown,cycleway
+115708747,unknown,cycleway
+115708748,Czaar Peterstraat,residential
+115708749,unknown,cycleway
+115711051,Oostenburgergracht,cycleway
+115711052,Czaar Peterstraat,residential
+115711053,unknown,cycleway
+115711600,Czaar Peterstraat,cycleway
+115743505,unknown,cycleway
+115743506,unknown,cycleway
+115743507,unknown,cycleway
+115743508,Molukkenstraat,cycleway
+115743514,Zeeburgerdijk,cycleway
+115743515,Molukkenstraat,cycleway
+115743516,Zeeburgerdijk,cycleway
+115743517,Zeeburgerdijk,cycleway
+115743518,unknown,cycleway
+115743696,Zeeburgerdijk,primary
+115750356,unknown,cycleway
+115750357,unknown,cycleway
+115750358,unknown,cycleway
+115750359,Zeeburgerdijk,primary
+115750360,unknown,cycleway
+115750361,unknown,cycleway
+115750362,unknown,cycleway
+117043866,Balistraat,cycleway
+117043867,unknown,cycleway
+117065433,Linnaeusstraat,cycleway
+117065434,Linnaeusstraat,cycleway
+117608648,Mauritskade,cycleway
+118106438,unknown,cycleway
+118446663,Cruquiusweg,cycleway
+118603691,Alexanderplein,cycleway
+118603693,Mauritskade,cycleway
+118605050,Sarphatistraat,tertiary
+118605670,unknown,cycleway
+118605672,unknown,cycleway
+118606125,unknown,cycleway
+118689922,unknown,cycleway
+118689923,unknown,cycleway
+118689924,Roomtuintjes,residential
+118689925,unknown,cycleway
+118689926,unknown,cycleway
+118689927,unknown,residential
+118690805,unknown,cycleway
+118690806,unknown,cycleway
+118690807,unknown,cycleway
+118691954,Pontanusstraat,cycleway
+118691956,Pontanusstraat,cycleway
+119308608,Th. K. van Lohuizenlaan,cycleway
+119308610,Th. K. van Lohuizenlaan,cycleway
+119308614,Zeeburgerdijk,cycleway
+119308615,Zeeburgerdijk,cycleway
+119308624,Zeeburgerdijk,cycleway
+119308627,Zeeburgerdijk,cycleway
+119308633,Zeeburgerdijk,cycleway
+119311654,unknown,cycleway
+121282988,Insulindeweg,residential
+121283029,unknown,cycleway
+121289339,Zeeburgerdijk,cycleway
+121289340,Zeeburgerdijk,cycleway
+122114280,unknown,cycleway
+122385716,Insulindeweg,cycleway
+122390645,Wijttenbachstraat,cycleway
+122390857,Oosterpark,cycleway
+122394095,unknown,cycleway
+122394096,unknown,cycleway
+124657880,Cruquiusweg,tertiary
+124660300,unknown,cycleway
+124660301,Kramatweg,cycleway
+124660302,unknown,cycleway
+124696546,J.M. van der Meylaan,cycleway
+124840797,Keerwal,residential
+124840798,Cruquiuskade,tertiary
+125511756,unknown,cycleway
+125511759,unknown,cycleway
+126221712,Veelaan,cycleway
+126221713,Veemarkt,residential
+126221716,unknown,cycleway
+126230982,unknown,cycleway
+126230983,Copernicusstraat,cycleway
+126231478,Archimedeslaan,residential
+127224485,Eerste Atjehstraat,cycleway
+127224486,unknown,cycleway
+136124605,Carolina MacGillavrylaan,cycleway
+136174501,Blankenstraat,residential
+136178518,Kraijenhoffstraat,cycleway
+136179598,unknown,cycleway
+136179599,unknown,tertiary
+136179601,Dageraadsbrug,tertiary
+136179602,unknown,cycleway
+136179603,unknown,cycleway
+136513264,unknown,cycleway
+136513266,Dirk Vreekenstraat,residential
+136513270,Borneolaan,residential
+136513280,unknown,cycleway
+136513282,unknown,cycleway
+137614014,unknown,cycleway
+137614015,unknown,cycleway
+137614016,unknown,cycleway
+144451997,Kastanjeweg,cycleway
+144451998,Eikenweg,cycleway
+145048346,Molukkenstraat,cycleway
+145048348,Insulindeweg,cycleway
+145514248,Insulindeweg,cycleway
+145514250,unknown,residential
+145518969,Celebesstraat,cycleway
+146244555,Insulindeweg,cycleway
+146254176,Zuiderzeeweg,secondary
+146254402,Zeeburgerdijk,tertiary
+146275971,unknown,cycleway
+146977377,Alexanderplein,cycleway
+146977378,Mauritskade,cycleway
+146977379,Alexanderplein,cycleway
+147561235,Borneolaan,residential
+147561237,unknown,cycleway
+147561239,J.M. van der Meylaan,cycleway
+148199985,Eerste Leeghwaterstraat,residential
+148199986,unknown,cycleway
+148306558,Soendastraat,residential
+148306559,Timorstraat,residential
+148306560,Billitonstraat,residential
+148306561,Borneostraat,residential
+148308601,Copernicusstraat,residential
+148310278,unknown,cycleway
+148311109,unknown,cycleway
+148311111,unknown,cycleway
+148311112,unknown,cycleway
+158070750,unknown,cycleway
+158070751,unknown,cycleway
+158071068,Riouwstraat,residential
+161975529,unknown,cycleway
+161975536,Oosterspoorplein,residential
+161975541,unknown,cycleway
+164971339,Zuiderzeeweg,cycleway
+172154460,unknown,cycleway
+172155791,Balistraat,residential
+172386584,Javaplantsoen,residential
+172392372,Javaplantsoen,residential
+172492937,Insulindeweg,residential
+172500941,Kramatweg,cycleway
+172500944,Zeeburgerdijk,residential
+174500364,Zeeburgerdijk,cycleway
+174500366,Zeeburgerdijk,tertiary
+174500367,Zeeburgerdijk,cycleway
+174500368,Zeeburgerdijk,cycleway
+180117911,unknown,residential
+180117920,Zeeburgerdijk,cycleway
+180117926,unknown,cycleway
+180117932,unknown,cycleway
+180117941,unknown,cycleway
+180117947,unknown,cycleway
+180117949,unknown,cycleway
+183342931,Linnaeusstraat,cycleway
+186891797,Oosterpark,cycleway
+190774233,Insulindeweg,residential
+191593760,unknown,cycleway
+195648502,Cruquiuskade,tertiary
+195648503,Oostenburgergracht,tertiary
+195649386,Insulindeweg,secondary
+207184822,J.M. van der Meylaan,cycleway
+207184823,J.M. van der Meylaan,cycleway
+217443548,unknown,residential
+221491316,Alexanderplein,cycleway
+221491317,Alexanderplein,cycleway
+221491318,Alexanderplein,cycleway
+222388934,unknown,cycleway
+224459319,Celebesstraat,cycleway
+225981836,Tweede van Swindenstraat,residential
+258138664,Zeeburgerdijk,tertiary
+258138666,Zeeburgerdijk,primary
+262218775,unknown,cycleway
+268615879,Dageraadsbrug,tertiary
+268615881,unknown,cycleway
+268766164,unknown,cycleway
+269052590,Kruithuisstraat,residential
+269774712,Polderweg,residential
+284529439,Boetonstraat,residential
+284529445,Javaplantsoen,residential
+284529447,Kramatweg,residential
+304634473,Javastraat,residential
+304661185,Zuiderzeeweg,cycleway
+306119743,Insulindeweg,cycleway
+306119744,Celebesstraat,cycleway
+306119745,Celebesstraat,residential
+307981300,Middenweg,cycleway
+307982476,unknown,cycleway
+307982477,unknown,cycleway
+307982478,unknown,cycleway
+307982479,unknown,cycleway
+307983750,Ooster Ringdijk,cycleway
+321177434,Zeeburgerstraat,tertiary
+321177435,unknown,cycleway
+323847236,Cruquiuskade,tertiary
+323847237,Cruquiuskade,tertiary
+323847238,Oostenburgergracht,tertiary
+323937630,unknown,cycleway
+324310026,Sarphatistraat,cycleway
+324310027,Sarphatistraat,cycleway
+325023862,Zuiderzeeweg,secondary
+325246226,Carolina MacGillavrylaan,tertiary
+325246227,Molukkenstraat,secondary
+325288075,Polderweg,residential
+325812120,unknown,cycleway
+328849644,Czaar Peterstraat,cycleway
+340004726,Cornelis Vermuydenstraat,cycleway
+356993840,Sumatrastraat,residential
+356993844,Sumatrastraat,residential
+356993848,Insulindeweg,residential
+356998399,Bonistraat,residential
+357001242,Sumatrastraat,residential
+357001243,Riouwstraat,residential
+357001244,Insulindeweg,residential
+357003664,Sumatraplantsoen,residential
+357003665,Sumatraplantsoen,residential
+357003667,Soerabajastraat,residential
+357005682,Celebesstraat,residential
+357005683,Celebesstraat,residential
+357538026,unknown,cycleway
+357538027,Linnaeusstraat,cycleway
+357538028,Linnaeusstraat,cycleway
+357538029,Eerste Van Swindenstraat,residential
+357538031,Eerste Van Swindenstraat,cycleway
+375099847,Hof van Eden,residential
+375099849,Tuin van Hera,residential
+375099850,Polderweg,residential
+375340265,Panamalaan,primary
+375340269,Piet Heinkade,primary
+375527991,Veemarkt,residential
+376957763,unknown,tertiary
+391010818,unknown,cycleway
+394378534,unknown,cycleway
+399512991,Touwbaanpark,cycleway
+399512992,Compagniestraat,residential
+403541605,Eerste Van Swindenstraat,cycleway
+403541657,Javastraat,residential
+405890309,unknown,cycleway
+427612437,unknown,cycleway
+427612449,unknown,cycleway
+431477539,Hof van Eden,residential
+431477592,unknown,cycleway
+432380498,unknown,cycleway
+439886615,unknown,cycleway
+439886616,Blankenstraat,cycleway
+439886617,Kraijenhoffstraat,residential
+439886961,unknown,cycleway
+458362021,Transvaalstraat,residential
+458363455,Transvaalkade,residential
+458363456,Transvaalkade,cycleway
+463625745,Polderweg,residential
+463625747,Polderweg,residential
+463647714,Preangerstraat,residential
+463647723,Borneostraat,residential
+471829718,Tuin van Hera,residential
+487222826,Jacob Bontiusplaats,residential
+487222827,Oostenburgermiddenstraat,residential
+489340984,Eldorado,residential
+490783303,Hoogte Kadijk,residential
+493461893,Mauritskade,cycleway
+499086653,unknown,cycleway
+499086654,Veelaan,tertiary
+499086655,Veelaan,cycleway
+499086656,unknown,cycleway
+499086657,Veelaan,cycleway
+499086658,Veelaan,tertiary
+501057682,Zeeburgerpad,residential
+501057683,Zeeburgerpad,residential
+504684737,Zeeburgerdijk,cycleway
+504684738,unknown,cycleway
+504863122,Mauritskade,primary
+504863124,unknown,cycleway
+504863126,Mauritskade,primary
+504863130,Wittenburgergracht,cycleway
+505939427,unknown,cycleway
+505939428,unknown,cycleway
+508480420,Hoogte Kadijk,residential
+508480421,Geschutswerf,residential
+509666978,Zeeburgerdijk,cycleway
+520306171,unknown,cycleway
+539112355,Kramatweg,cycleway
+547502340,Mauritskade,cycleway
+547502344,Ooster Ringdijk,cycleway
+553770152,unknown,cycleway
+553770155,unknown,cycleway
+553770173,unknown,cycleway
+553770177,unknown,cycleway
+553770180,Molukkenstraat,secondary
+553770182,Molukkenstraat,secondary
+553776524,Molukkenstraat,secondary
+554108531,unknown,cycleway
+558048872,unknown,cycleway
+559026717,Kramatweg,residential
+559787097,Kleine Wittenburgerstraat,residential
+559792593,Tugelaweg,residential
+559792594,Tugelaweg,residential
+564797103,unknown,cycleway
+571409076,Maria Skłodowska-Curiebrug,cycleway
+571409077,unknown,cycleway
+571409078,unknown,cycleway
+571410214,unknown,cycleway
+571410215,unknown,cycleway
+580523115,Polderweg,residential
+582944680,Polderweg,cycleway
+582944682,Polderweg,residential
+583257729,Mauritskade,cycleway
+584445981,Molukkenstraat,secondary
+586407889,unknown,cycleway
+586407890,Wijttenbachstraat,cycleway
+593435323,Oosterpark,cycleway
+603900269,unknown,cycleway
+610252176,Celebesstraat,residential
+610252178,Oosterspoorplein,cycleway
+610252180,Pontanusstraat,residential
+610252181,Oetewalerpad,cycleway
+610252182,Linnaeusstraat,cycleway
+610252184,Linnaeusstraat,cycleway
+610252191,Linnaeusstraat,cycleway
+610252194,Mauritskade,cycleway
+614449799,Insulindeweg,secondary
+614449800,Molukkenstraat,secondary
+614449801,Insulindeweg,secondary
+630293396,Keerwal,residential
+632657494,unknown,residential
+654075602,Louise Wentstraat,residential
+660841421,Bottelarijstraat,residential
+670978249,Tuin van Hera,residential
+670978251,Waldenlaan,residential
+682307717,Von Zesenstraat,residential
+682307718,Commelinstraat,residential
+737950161,unknown,cycleway
+737950162,unknown,cycleway
+737950168,unknown,cycleway
+737950176,unknown,cycleway
+737950179,unknown,cycleway
+738258604,Zeeburgerdijk,primary
+738258605,Zeeburgerdijk,primary
+738259341,Zeeburgerdijk,primary
+738259342,Zeeburgerdijk,primary
+742163309,Insulindeweg,cycleway
+742259505,Borneolaan,residential
+742505572,unknown,cycleway
+743266445,Linnaeusstraat,secondary
+744277560,Zeeburgerdijk,cycleway
+744277561,Zeeburgerdijk,cycleway
+744277562,Th. K. van Lohuizenlaan,cycleway
+744277564,Zeeburgerpad,residential
+744277565,unknown,cycleway
+744277566,unknown,cycleway
+749251053,unknown,cycleway
+754529312,Carolina MacGillavrylaan,tertiary
+754704156,Insulindeweg,secondary
+754704157,Molukkenstraat,secondary
+754704162,Molukkenstraat,secondary
+755044086,Oosterspoorplein,cycleway
+755044087,Oosterspoorplein,cycleway
+757702878,Molukkenstraat,secondary
+770426566,Molukkenstraat,tertiary
+770426567,Molukkenstraat,tertiary
+770426568,Javaplein,cycleway
+770426569,Javaplein,cycleway
+770426570,Molukkenstraat,cycleway
+770426571,Molukkenstraat,cycleway
+770426572,Javaplein,tertiary
+770429435,Insulindeweg,secondary
+770429440,Insulindeweg,secondary
+770429441,Insulindeweg,secondary
+770429444,Toministraat,residential
+770429447,Celebesstraat,residential
+770429448,Insulindeweg,residential
+770430119,Insulindeweg,secondary
+770430120,Riouwstraat,residential
+770430121,Insulindeweg,secondary
+770430122,Insulindeweg,secondary
+770433017,unknown,cycleway
+770434439,unknown,secondary
+770434440,Zuiderzeeweg,secondary
+770436181,Insulindeweg,residential
+770444287,Linnaeusstraat,cycleway
+770460798,Linnaeusstraat,secondary
+770468927,Linnaeusstraat,secondary
+770473083,Polderweg,cycleway
+770473086,Pretoriusstraat,cycleway
+770482206,Middenweg,secondary
+770493665,Linnaeuskade,residential
+770493666,Middenweg,secondary
+773868808,Mauritskade,primary
+773868809,Mauritskade,primary
+773868812,Mauritskade,primary
+773868813,Mauritskade,primary
+773868814,unknown,primary
+773868816,unknown,primary
+773868817,unknown,primary
+773868818,unknown,primary
+773868819,unknown,primary
+773869640,Alexanderplein,tertiary
+773869641,Alexanderplein,tertiary
+773869643,Alexanderplein,tertiary
+773872197,Linnaeusstraat,secondary
+773872198,Linnaeusstraat,secondary
+789208345,Zeeburgerkade,cycleway
+789208347,Th. K. van Lohuizenlaan,cycleway
+819816301,Oostenburgergracht,cycleway
+836187023,Kleine Wittenburgerstraat,residential
+846636109,Carolina MacGillavrylaan,tertiary
+854913629,Hoogte Kadijk,residential
+854913630,Hoogte Kadijk,residential
+865965002,Molukkenstraat,cycleway
+865965003,Molukkenstraat,cycleway
+865965004,Molukkenstraat,cycleway
+868161916,Galileïplantsoen,residential
+868635779,Kleine Wittenburgerstraat,residential
+874772120,Zeeburgerdijk,cycleway
+874772123,Zeeburgerdijk,tertiary
+884334996,Entrepotdok,residential
+885021976,Pontanusstraat,residential
+885021977,Zeeburgerstraat,tertiary
+885271705,unknown,cycleway
+885271706,unknown,cycleway
+891087599,unknown,cycleway
+891087601,Czaar Peterstraat,residential
+891092619,Entrepotdok,cycleway
+895347489,Valentijnkade,residential
+917156647,Polderweg,residential
+917156648,Polderweg,residential
+917156649,unknown,cycleway
+917156651,Ooster Ringdijk,cycleway
+917156652,Ooster Ringdijk,cycleway
+931232657,unknown,cycleway
+931232658,unknown,cycleway
+931232659,Insulindeweg,cycleway
+931232660,Insulindeweg,cycleway
+931233823,Th. K. van Lohuizenlaan,tertiary
+931233824,Th. K. van Lohuizenlaan,tertiary
+931233825,Th. K. van Lohuizenlaan,tertiary
+931233826,Th. K. van Lohuizenlaan,tertiary
+931233827,Th. K. van Lohuizenlaan,tertiary
+931233828,Th. K. van Lohuizenlaan,tertiary
+931233829,Th. K. van Lohuizenlaan,tertiary
+931233830,Th. K. van Lohuizenlaan,tertiary
+931233831,Th. K. van Lohuizenlaan,tertiary
+931233832,Zeeburgerdijk,tertiary
+931233833,Th. K. van Lohuizenlaan,tertiary
+931233834,Th. K. van Lohuizenlaan,tertiary
+931233835,Zeeburgerdijk,tertiary
+931233836,Zeeburgerdijk,tertiary
+949771545,Panamalaan,primary
+975323193,Cruquiusstraat,residential
+1025370978,unknown,cycleway
+1041277078,Copernicusstraat,residential
+1044086670,Archimedeslaan,residential
+1057857343,Sumatrastraat,residential
+1057857344,Ambonplein,residential
+1071314298,Zeeburgerdijk,tertiary
+1079183574,unknown,cycleway
+1079183575,Middenweg,cycleway
+1079183576,Middenweg,cycleway
+1079425313,Middenweg,secondary
+1079425314,Middenweg,secondary
+1079429590,Middenweg,cycleway
+1079787968,Vrolikstraat,cycleway
+1080911084,Carolina MacGillavrylaan,cycleway
+1081996732,Cruquiusweg,tertiary
+1082310746,Timorplein,residential
+1090547014,Carolina MacGillavrylaan,cycleway
+1090729712,unknown,cycleway
+1090785123,Carolina MacGillavrylaan,tertiary
+1090785124,Carolina MacGillavrylaan,tertiary
+1090785130,Carolina MacGillavrylaan,cycleway
+1090838677,Carolina MacGillavrylaan,tertiary
+1090846594,Carolina MacGillavrylaan,cycleway
+1090846595,Carolina MacGillavrylaan,cycleway
+1091191355,Carolina MacGillavrylaan,tertiary
+1091191356,Carolina MacGillavrylaan,tertiary
+1091856156,Carolina MacGillavrylaan,cycleway
+1092105435,Carolina MacGillavrylaan,tertiary
+1092105436,Carolina MacGillavrylaan,tertiary
+1092105437,Carolina MacGillavrylaan,tertiary
+1100640593,Molukkenstraat,secondary
+1100640594,Carolina MacGillavrylaan,tertiary
+1100640595,Carolina MacGillavrylaan,tertiary
+1100640596,Molukkenstraat,secondary
+1100640600,Molukkenstraat,secondary
+1100640601,Molukkenstraat,secondary
+1100640602,Molukkenstraat,secondary
+1100640603,Molukkenstraat,secondary
+1100640604,Molukkenstraat,secondary
+1100640606,Molukkenstraat,secondary
+1100787462,Ooster Ringdijk,cycleway
+1100787463,Ooster Ringdijk,cycleway
+1100787465,Ooster Ringdijk,cycleway
+1135938994,Linnaeusstraat,cycleway
+1137884621,Jan Kiststraat,residential
+1137884622,Willem Parelstraat,residential
+1138382959,unknown,cycleway
+1138382963,Linnaeusstraat,secondary
+1138382965,Linnaeusstraat,cycleway
+1138382966,Linnaeusstraat,cycleway
+1138382967,Pretoriusstraat,residential
+1146079856,Zeeburgerdijk,cycleway
+1161682104,Willem Parelstraat,residential
+1178529647,Czaar Peterstraat,cycleway
+1191563223,Th. K. van Lohuizenlaan,cycleway
+1191563224,Th. K. van Lohuizenlaan,cycleway
+1191563225,Th. K. van Lohuizenlaan,tertiary
+1191563230,Th. K. van Lohuizenlaan,cycleway
+1229996044,Insulindeweg,secondary
+1284387927,Pontanusstraat,residential
+1284388006,Wijttenbachstraat,secondary
+1284388007,Wijttenbachstraat,secondary
+1284388119,Pontanusstraat,cycleway
+1305987254,Reinwardtstraat,residential
+1315058575,Ezelsbrug,cycleway
+1315080912,Oosterspoorplein,cycleway
+1341304531,Oostenburgermiddenstraat,residential
+1350707066,Zeeburgerdijk,primary
+1350707067,Zeeburgerdijk,primary
+1356511201,Pontanusstraat,cycleway
+1372689903,Oostenburgermiddenstraat,residential
+1374480058,unknown,residential
+1374480059,Tidorestraat,residential
+1376777054,Sumatrastraat,residential
+1388488946,Panamalaan,cycleway
+1413008718,unknown,cycleway
+1413008719,unknown,residential
+1413008722,Woltera van Reesstraat,cycleway
+1413008723,Woltera van Reesstraat,cycleway
+1423636836,unknown,cycleway
+1423636837,unknown,cycleway
+1423679445,unknown,cycleway
+1445392732,unknown,primary
+1445392734,unknown,primary

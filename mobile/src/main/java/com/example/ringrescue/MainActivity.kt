@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private val useMockLocation = true
-    private var mockLat = 52.379189
-    private var mockLon = 4.899431
+    private var mockLat = 52.361448
+    private var mockLon = 4.924817
     private var mockMovementJob: Job? = null
 
     private var userMarker: Marker? = null
@@ -84,7 +84,8 @@ class MainActivity : AppCompatActivity() {
 
         val graphhopper = GraphhopperService("e8d1e0f8-1e9e-4034-bc2f-25153ec6bcc1")
         wearService = PhoneWearService(this)
-        controller = NavigationController(graphhopper, wearService)
+        val safetyEvaluator = SafetyEvaluator(this)
+        controller = NavigationController(graphhopper, wearService, safetyEvaluator)
 
         setupFooter()
 

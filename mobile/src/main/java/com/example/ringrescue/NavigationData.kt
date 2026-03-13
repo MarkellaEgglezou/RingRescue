@@ -30,9 +30,16 @@ data class NavigationCue(
     }
 }
 
+data class RouteSegment(
+    val osmWayId: Long,
+    val distance: Double
+)
+
 data class NavigationRoute(
     val cues: List<NavigationCue>,
-    val points: List<Pair<Double, Double>>
+    val points: List<Pair<Double, Double>>,
+    val segments: List<RouteSegment> = emptyList(),
+    var safetyScore: Double = 0.5
 )
 
 enum class ManeuverType {
