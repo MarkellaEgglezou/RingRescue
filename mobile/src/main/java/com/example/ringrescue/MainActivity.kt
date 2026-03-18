@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var controller: NavigationController
     private lateinit var locationService: LocationService
     private lateinit var wearService: PhoneWearService
+    private lateinit var feedbackManager: FeedbackManager
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     private val useMockLocation = true
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         locationService = LocationService(this)
         sosManager = SosManager(this)
+        feedbackManager = FeedbackManager(this)
 
         val graphhopper = GraphhopperService("e8d1e0f8-1e9e-4034-bc2f-25153ec6bcc1")
         wearService = PhoneWearService(this)
@@ -157,6 +160,8 @@ class MainActivity : AppCompatActivity() {
                 btnStartNav.text = "Stop"
                 btnStartNav.isEnabled = true
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(startLat, startLon), 15.0))
+
+                Toast.makeText(this@MainActivity, "Safest route calculated!", Toast.LENGTH_SHORT).show()
 
                 if (useMockLocation) {
                     startMockMovement(route)
@@ -293,13 +298,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showArrivalDialog() {
+        val route = controller.route.value
+        val osmWayIds = route?.segments?.map { it.osmWayId } ?: emptyList()
+        val streetNames = route?.cues?.map { it.nextStreet }?.filter { it.isNotEmpty() } ?: emptyList()
+        
         stopNavigation()
+
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_arrival_feedback, null)
+        val ratingLighting = view.findViewById<RatingBar>(R.id.ratingLighting)
+        val ratingSafety = view.findViewById<RatingBar>(R.id.ratingSafety)
+
         AlertDialog.Builder(this)
-            .setTitle("Arrived")
-            .setMessage("You have reached your destination!")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
+            .setTitle("You have reached your destination!")
+            .setView(view)
+            .setPositiveButton("Submit") { _, _ ->
+                val lighting = ratingLighting.rating
+                val safety = ratingSafety.rating
+                feedbackManager.saveFeedback(osmWayIds, streetNames, lighting, safety)
+                Toast.makeText(this, "Thank you for your feedback!", Toast.LENGTH_SHORT).show()
             }
+            .setNegativeButton("Cancel", null)
             .show()
     }
 

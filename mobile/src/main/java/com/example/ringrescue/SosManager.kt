@@ -64,7 +64,7 @@ class SosManager(private val context: Context) {
                     }
                 }
 
-                Toast.makeText(context, "SOS sent to $sentCount contacts!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "SOS sent to $sentCount contact(s)!", Toast.LENGTH_SHORT).show()
             }
         } catch (e: SecurityException) {
             Toast.makeText(context, "Permission denied for SOS", Toast.LENGTH_SHORT).show()

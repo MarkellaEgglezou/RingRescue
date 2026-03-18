@@ -1,6 +1,9 @@
 package com.example.ringrescue.presentation
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.util.Log
 import com.google.android.gms.wearable.*
 import kotlinx.coroutines.*
@@ -44,6 +47,23 @@ class WearableNavigationService(private val context: Context,
                 _connectionStatus.value = ConnectionStatus.CONNECTED
                 _navigationCue.value = null
             }
+            "/request_battery" -> {
+                sendBatteryLevel()
+            }
+        }
+    }
+
+    private fun sendBatteryLevel() {
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+            context.registerReceiver(null, ifilter)
+        }
+        val level: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+        val batteryPct = if (level >= 0 && scale > 0) (level * 100 / scale) else -1
+        
+        Log.d("WearNavService", "Sending battery level: $batteryPct")
+        coroutineScope.launch {
+            sendMessage("/battery_level", batteryPct.toString().toByteArray())
         }
     }
 

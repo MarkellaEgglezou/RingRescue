@@ -13,64 +13,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import android.view.KeyEvent
-import android.os.SystemClock
 import androidx.wear.compose.material3.Button
+import androidx.wear.compose.material3.ButtonDefaults
 
 class MainActivity : ComponentActivity() {
 
-    // Create the ViewModel instance manually
     private lateinit var viewModel: NavigationViewModel
-
-    // SOS press tracking
-    private var pressCount = 0
-    private var firstPressTime = 0L
-    private val SOS_WINDOW_MS = 3000L // 3 seconds to press 3 times
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-
-        if (keyCode == KeyEvent.KEYCODE_STEM_1) { // Button 1
-            handleSosPress()
-            return true
-        }
-
-        return super.onKeyDown(keyCode, event)
-    }
-
-    private fun handleSosPress() {
-        val now = SystemClock.elapsedRealtime()
-
-        if (pressCount == 0) {
-            firstPressTime = now
-        }
-
-        pressCount++
-
-        if (pressCount == 3 && (now - firstPressTime) <= SOS_WINDOW_MS) {
-            viewModel.sendSos()
-            pressCount = 0
-        }
-
-        // Reset if too slow
-        if ((now - firstPressTime) > SOS_WINDOW_MS) {
-            pressCount = 1
-            firstPressTime = now
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create the wearable service
         val wearableService = WearableNavigationService(this, simulate = false)
-
-        // Create ViewModel manually
         viewModel = NavigationViewModel(wearableService)
 
         setContent {
             RingRescueTheme {
-                // Pass the ViewModel to your composable
                 WearApp(viewModel = viewModel)
             }
         }
@@ -82,53 +41,59 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Composable that accepts ViewModel as parameter
 @Composable
 fun WearApp(viewModel: NavigationViewModel) {
-    // Use the ViewModel directly
     val uiState by viewModel.uiState.collectAsState()
 
     AppScaffold {
         ScreenScaffold { contentPadding ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                // Temporary UI test
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Button(
-                        onClick = { viewModel.sendSos() }
-                    ) {
-                        Text("Test SOS")
+                // Main content: Navigation or Connection Status
+                // Added bottom padding to ensure it doesn't overlap with the SOS button
+                Box(modifier = Modifier.fillMaxSize().padding(bottom = 55.dp)) {
+                    if (uiState.connectionStatus == WearableNavigationService.ConnectionStatus.NAVIGATING) {
+                        NavigationScreen(uiState)
+                    } else {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("${uiState.connectionStatus}")
+                        }
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
                 }
 
-                // Main content
-                if (uiState.connectionStatus ==
-                    WearableNavigationService.ConnectionStatus.NAVIGATING
+                // SOS Button: Positioned at the very bottom
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 4.dp),
+                    contentAlignment = Alignment.BottomCenter
                 ) {
-                    NavigationScreen(uiState)
-                } else {
-                    Text("${uiState.connectionStatus}")
+                    Button(
+                        onClick = { viewModel.sendSos() },
+                        modifier = Modifier.size(52.dp),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(
+                            text = "SOS",
+                            style = androidx.wear.compose.material3.MaterialTheme.typography.labelMedium,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                            maxLines = 1,
+                            softWrap = false
+                        )
+                    }
                 }
 
-                // SOS function
+                // SOS Confirmation Overlay
                 if (uiState.showSosSent) {
-
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top=24.dp),
+                            .padding(top = 24.dp),
                         contentAlignment = Alignment.TopCenter
                     ) {
-
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -153,30 +118,20 @@ fun WearApp(viewModel: NavigationViewModel) {
 
 @Composable
 fun NavigationScreen(uiState: NavigationUiState) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            // Big Arrow
             ManeuverArrow(uiState.maneuverType)
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Distance
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "${uiState.distanceToNextTurn} m",
                 style = androidx.wear.compose.material3.MaterialTheme.typography.displayMedium
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Next street
             if (uiState.nextStreet.isNotEmpty()) {
                 Text(
                     text = uiState.nextStreet,
-                    style = androidx.wear.compose.material3.MaterialTheme.typography.bodyMedium
+                    style = androidx.wear.compose.material3.MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -185,7 +140,6 @@ fun NavigationScreen(uiState: NavigationUiState) {
 
 @Composable
 fun ManeuverArrow(maneuverType: ManeuverType?) {
-
     val arrow = when (maneuverType) {
         ManeuverType.TURN_LEFT -> "←"
         ManeuverType.TURN_RIGHT -> "→"
@@ -200,9 +154,9 @@ fun ManeuverArrow(maneuverType: ManeuverType?) {
         ManeuverType.ARRIVED -> "✓"
         else -> "•"
     }
-
     Text(
         text = arrow,
-        style = androidx.wear.compose.material3.MaterialTheme.typography.displayLarge
+        style = androidx.wear.compose.material3.MaterialTheme.typography.displayLarge,
+        textAlign = TextAlign.Center
     )
 }

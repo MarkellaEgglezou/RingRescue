@@ -3,6 +3,8 @@ package com.example.ringrescue
 import android.content.Context
 import android.util.Log
 import java.io.BufferedReader
+import java.io.File
+import java.io.InputStream
 import java.io.InputStreamReader
 
 class SafetyEvaluator(context: Context) {
@@ -18,8 +20,17 @@ class SafetyEvaluator(context: Context) {
         try {
             // 1. Load OSM Way ID to Safety Score mapping
             val idToScore = mutableMapOf<Long, Double>()
-            context.assets.open("street_safety_scores.csv").use { inputStream ->
-                val reader = BufferedReader(InputStreamReader(inputStream))
+            
+            // Prefer the updated file in internal storage
+            val internalFile = File(context.filesDir, "street_safety_scores.csv")
+            val inputStream: InputStream = if (internalFile.exists()) {
+                internalFile.inputStream()
+            } else {
+                context.assets.open("street_safety_scores.csv")
+            }
+
+            inputStream.use { stream ->
+                val reader = BufferedReader(InputStreamReader(stream))
                 reader.readLine() // skip header
                 reader.forEachLine { line ->
                     val parts = line.split(",")
@@ -34,8 +45,8 @@ class SafetyEvaluator(context: Context) {
             }
 
             // 2. Load OSM Way ID to Street Name mapping and join with scores
-            context.assets.open("streets.csv").use { inputStream ->
-                val reader = BufferedReader(InputStreamReader(inputStream))
+            context.assets.open("streets.csv").use { stream ->
+                val reader = BufferedReader(InputStreamReader(stream))
                 reader.readLine() // skip header
                 reader.forEachLine { line ->
                     val parts = line.split(",")
@@ -46,8 +57,6 @@ class SafetyEvaluator(context: Context) {
                         if (osmWayId != null && streetName.isNotEmpty() && streetName != "unknown") {
                             val score = idToScore[osmWayId]
                             if (score != null) {
-                                // If multiple segments have the same name, we take the average
-                                // for simplicity, or just update it (most will be similar)
                                 streetSafetyMap[streetName.lowercase()] = score
                             }
                         }
@@ -60,10 +69,6 @@ class SafetyEvaluator(context: Context) {
         }
     }
 
-    /**
-     * Calculates the safety score for a route based on street names.
-     * Streets not found in our dataset or with empty names are considered "safe" (1.0).
-     */
     fun calculateRouteSafety(streetNames: List<String>, distances: List<Int>): Double {
         if (streetNames.isEmpty()) return 1.0
         
@@ -74,7 +79,6 @@ class SafetyEvaluator(context: Context) {
             val name = streetNames[i].lowercase().trim()
             val dist = if (i < distances.size) distances[i].toDouble() else 100.0
             
-            // Default to 1.0 (safe) if street is unknown
             val score = if (name.isEmpty() || name == "unknown") 1.0 else streetSafetyMap[name] ?: 1.0
             
             totalWeightedScore += score * dist

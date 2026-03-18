@@ -15,8 +15,6 @@ class GraphhopperService(private val apiKey: String) {
 
     /**
      * Fetches multiple routes using different bike profiles.
-     * Note: 'details=osm_id' is removed as it often triggers "Flexible Mode" 
-     * which is not available on GraphHopper's free tier.
      */
     suspend fun getRoutes(
         startLat: Double,
@@ -26,16 +24,22 @@ class GraphhopperService(private val apiKey: String) {
         maxPaths: Int = 3
     ): List<NavigationRoute> = withContext(Dispatchers.IO) {
 
-        // Try standard profiles allowed on the free tier.
         val profiles = listOf("bike", "mtb", "racingbike").take(maxPaths)
         
         val deferredRoutes = profiles.map { profile ->
             async {
                 try {
-                    fetchSingleRoute(startLat, startLon, endLat, endLon, profile)
+                    // Try to include details for OSM ID
+                    fetchSingleRoute(startLat, startLon, endLat, endLon, profile, includeDetails = true)
                 } catch (e: Exception) {
-                    Log.e("GraphhopperService", "Failed to fetch route for profile $profile: ${e.message}")
-                    null
+                    Log.e("GraphhopperService", "Failed to fetch route with details for $profile: ${e.message}")
+                    try {
+                        // Fallback without details if OSM ID is the problem
+                        fetchSingleRoute(startLat, startLon, endLat, endLon, profile, includeDetails = false)
+                    } catch (e2: Exception) {
+                        Log.e("GraphhopperService", "Failed fallback for $profile: ${e2.message}")
+                        null
+                    }
                 }
             }
         }
@@ -43,7 +47,6 @@ class GraphhopperService(private val apiKey: String) {
         val results = deferredRoutes.awaitAll().filterNotNull()
         
         if (results.isEmpty()) {
-            // Last resort: try a very basic request with just 'bike'
             try {
                 listOf(fetchSingleRoute(startLat, startLon, endLat, endLon, "bike", includeDetails = false))
             } catch (e: Exception) {
@@ -61,14 +64,13 @@ class GraphhopperService(private val apiKey: String) {
         endLat: Double,
         endLon: Double,
         profile: String,
-        includeDetails: Boolean = false // Set to false by default for free tier compatibility
+        includeDetails: Boolean
     ): NavigationRoute {
         var url = "https://graphhopper.com/api/1/route?" +
                 "point=$startLat,$startLon&" +
                 "point=$endLat,$endLon&" +
                 "profile=$profile&instructions=true&points_encoded=false&key=$apiKey"
         
-        // Only add details if explicitly requested, as it might trigger Flexible Mode
         if (includeDetails) {
             url += "&details=osm_id"
         }
@@ -137,8 +139,10 @@ class GraphhopperService(private val apiKey: String) {
             val osmIds = path.getJSONObject("details").getJSONArray("osm_id")
             for (i in 0 until osmIds.length()) {
                 val detail = osmIds.getJSONArray(i)
-                val osmId = detail.getLong(2)
-                segments.add(RouteSegment(osmId, 1.0))
+                val osmId = detail.optLong(2)
+                if (osmId != 0L) {
+                    segments.add(RouteSegment(osmId, 1.0))
+                }
             }
         }
 
